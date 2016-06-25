@@ -1,0 +1,4 @@
+include ':segment'
+include ':segment-sample'
+
+rootProject.name = 'segment-parent'
