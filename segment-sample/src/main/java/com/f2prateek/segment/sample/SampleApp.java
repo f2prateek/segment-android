@@ -9,11 +9,11 @@ public class SampleApp extends Application {
   @Override public void onCreate() {
     super.onCreate();
 
+    //noinspection SpellCheckingInspection
     Segment segment = new Segment.Builder().writeKey("5m6gbdgho6").context(this).build();
-    Segment.setSingletonInstance(segment);
 
     Map<String, Object> properties = new LinkedHashMap<>();
     properties.put("foo", "bar");
-    Segment.with(this).track("Event A").properties(properties);
+    segment.enqueue(segment.newTrack("Event A").properties(properties).build());
   }
 }

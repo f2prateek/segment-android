@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.f2prateek.segment.sample">
 
   <application
       android:label="@string/app_name"
-      android:name=".SampleApp">
+      android:name=".SampleApp"
+      tools:ignore="AllowBackup,GoogleAppIndexingWarning,MissingApplicationIcon">
     <activity
         android:label="@string/app_name"
         android:name=".MainActivity">

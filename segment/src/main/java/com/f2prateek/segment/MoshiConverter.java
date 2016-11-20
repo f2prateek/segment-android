@@ -9,7 +9,7 @@ import okio.Buffer;
 import okio.BufferedSink;
 import okio.Okio;
 
-/** A {@link Moshi} based {@link ObjectQueue.Converter} implementation. */
+/** A {@link Moshi} backed {@link ObjectQueue.Converter} implementation. */
 final class MoshiConverter<T> implements ObjectQueue.Converter<T> {
   private final JsonAdapter<T> adapter;
 

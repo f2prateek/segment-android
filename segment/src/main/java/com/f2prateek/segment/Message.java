@@ -9,18 +9,14 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.Future;
 
 import static com.f2prateek.segment.Utils.assertNotNull;
 import static com.f2prateek.segment.Utils.assertNotNullOrEmpty;
-import static com.f2prateek.segment.Utils.hasPermission;
 import static com.f2prateek.segment.Utils.immutableCopyOf;
 import static com.f2prateek.segment.Utils.isNullOrEmpty;
 
 /** Encapsulates properties common to all messages. */
 public abstract class Message {
-  @Private static final Handler MAIN_THREAD_HANDLER = new Handler(Looper.getMainLooper());
-
   public enum Type {
     identify, group, track, screen, alias
   }
@@ -51,37 +47,8 @@ public abstract class Message {
     String userId;
     String anonymousId;
 
-    @Nullable final Segment segment;
-    @Nullable final Handler handler;
-    final Runnable enqueueRunnable = new Runnable() {
-      @Override public void run() {
-        enqueue();
-      }
-    };
-
     Builder(@NonNull Type type) {
       this.type = type;
-      segment = null;
-      handler = null;
-    }
-
-    Builder(@NonNull Type type, @NonNull Segment segment) {
-      this.type = type;
-      this.segment = segment;
-      if (Looper.myLooper() == null || Looper.myLooper() == Looper.getMainLooper()) {
-        handler = MAIN_THREAD_HANDLER;
-      } else {
-        handler = new Handler();
-      }
-
-      String anonymousId = assertNotNullOrEmpty(segment.anonymousIdCache.get(), "anonymousId");
-      anonymousId(anonymousId);
-
-      String userId = segment.userIdCache.get();
-      if (!isNullOrEmpty(userId)) {
-        //noinspection ConstantConditions
-        userId(userId);
-      }
     }
 
     Builder(Message message) {
@@ -92,8 +59,6 @@ public abstract class Message {
       integrationsBuilder = new LinkedHashMap<>(message.integrations());
       userId = message.userId();
       anonymousId = message.anonymousId();
-      this.segment = null;
-      this.handler = null;
     }
 
     /**
@@ -105,7 +70,6 @@ public abstract class Message {
      */
     public V messageId(String messageId) {
       this.messageId = assertNotNullOrEmpty(messageId, "messageId");
-      postEnqueue();
       return self();
     }
 
@@ -119,7 +83,6 @@ public abstract class Message {
      */
     V timestamp(Date timestamp) {
       this.timestamp = assertNotNull(timestamp, "timestamp");
-      postEnqueue();
       return self();
     }
 
@@ -136,7 +99,6 @@ public abstract class Message {
     public @NonNull V context(@NonNull Map<String, Object> context) {
       assertNotNull(context, "context");
       this.context = immutableCopyOf(context);
-      postEnqueue();
       return self();
     }
 
@@ -152,7 +114,6 @@ public abstract class Message {
         integrationsBuilder = new LinkedHashMap<>();
       }
       integrationsBuilder.put(key, enable);
-      postEnqueue();
       return self();
     }
 
@@ -169,7 +130,6 @@ public abstract class Message {
         integrationsBuilder = new LinkedHashMap<>();
       }
       integrationsBuilder.put(key, immutableCopyOf(options));
-      postEnqueue();
       return self();
     }
 
@@ -185,7 +145,6 @@ public abstract class Message {
      */
     V anonymousId(@NonNull String anonymousId) {
       this.anonymousId = assertNotNullOrEmpty(anonymousId, "anonymousId");
-      postEnqueue();
       return self();
     }
 
@@ -200,18 +159,17 @@ public abstract class Message {
      */
     V userId(@NonNull String userId) {
       this.userId = assertNotNullOrEmpty(userId, "userId");
-      postEnqueue();
       return self();
     }
 
     protected abstract T realBuild(Type type, String messageId, Date timestamp,
         Map<String, Object> context, Map<String, Object> integrations, String userId,
-        String anonymousId, Segment segment);
+        String anonymousId);
 
     abstract V self();
 
     /** Create a {@link Message} instance. */
-    @NonNull T build() {
+    public @NonNull T build() {
       assertNotNull(type, "type");
 
       if (isNullOrEmpty(userId) && isNullOrEmpty(anonymousId)) {
@@ -229,24 +187,7 @@ public abstract class Message {
         timestamp = new Date();
       }
 
-      return realBuild(type, messageId, timestamp, context, integrations, userId, anonymousId,
-          segment);
-    }
-
-    /** Enqueue a {@link Message} instance. Enqueuing is implicit and will be run automatically. */
-    public Future<T> enqueue() {
-      assertNotNull(segment, "segment");
-      assertNotNull(handler, "handler");
-      handler.removeCallbacks(enqueueRunnable);
-      return segment.enqueue(build());
-    }
-
-    void postEnqueue() {
-      if (handler == null) {
-        return;
-      }
-      handler.removeCallbacks(enqueueRunnable);
-      handler.post(enqueueRunnable);
+      return realBuild(type, messageId, timestamp, context, integrations, userId, anonymousId);
     }
   }
 }

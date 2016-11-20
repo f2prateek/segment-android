@@ -91,7 +91,8 @@ abstract class SegmentMoshiAdapterFactory implements JsonAdapter.Factory {
           moshi.adapter(Types.newParameterizedType(Map.class, String.class, Object.class));
     }
 
-    @Override public Message fromJson(JsonReader reader) throws IOException {
+    @SuppressWarnings("ConstantConditions") @Override //
+    public Message fromJson(JsonReader reader) throws IOException {
       reader.beginObject();
 
       // Common fields.

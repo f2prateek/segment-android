@@ -11,6 +11,7 @@ import java.util.Map;
 
 import static com.f2prateek.segment.Utils.assertNotNullOrEmpty;
 import static com.f2prateek.segment.Utils.immutableCopyOf;
+import static com.f2prateek.segment.Utils.isNullOrEmpty;
 
 /**
  * The screen call lets you record whenever a user sees a screen, along with any properties about
@@ -37,8 +38,8 @@ public abstract class ScreenMessage extends Message {
     private String name;
     private Map<String, Object> properties;
 
-    public Builder(@NonNull Segment segment) {
-      super(Type.screen, segment);
+    Builder() {
+      super(Type.screen);
     }
 
     @Private Builder(ScreenMessage screen) {
@@ -47,30 +48,24 @@ public abstract class ScreenMessage extends Message {
       properties = screen.properties();
     }
 
-    @Private Builder() {
-      super(Type.screen);
-    }
-
     public Builder name(@NonNull String name) {
       this.name = assertNotNullOrEmpty(name, "name");
-      postEnqueue();
       return this;
     }
 
     public Builder properties(@NonNull Map<String, Object> properties) {
       Utils.assertNotNull(properties, "properties");
       this.properties = immutableCopyOf(properties);
-      postEnqueue();
       return this;
     }
 
     @Override protected ScreenMessage realBuild(Type type, String messageId, Date timestamp,
         Map<String, Object> context, Map<String, Object> integrations, String userId,
-        String anonymousId, Segment segment) {
+        String anonymousId) {
       assertNotNullOrEmpty(name, "name");
 
       Map<String, Object> properties = this.properties;
-      if (Utils.isNullOrEmpty(properties)) {
+      if (isNullOrEmpty(properties)) {
         properties = Collections.emptyMap();
       }
 

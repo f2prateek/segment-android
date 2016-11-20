@@ -33,8 +33,8 @@ public abstract class AliasMessage extends Message {
   public static class Builder extends Message.Builder<AliasMessage, Builder> {
     private String previousId;
 
-    public Builder(@NonNull Segment segment) {
-      super(Type.alias, segment);
+    Builder() {
+      super(Type.alias);
     }
 
     @Private Builder(AliasMessage alias) {
@@ -42,19 +42,14 @@ public abstract class AliasMessage extends Message {
       this.previousId = alias.previousId();
     }
 
-    @Private Builder() {
-      super(Type.alias);
-    }
-
     public @NonNull Builder previousId(@NonNull String previousId) {
       this.previousId = assertNotNullOrEmpty(previousId, "previousId");
-      postEnqueue();
       return this;
     }
 
     @Override protected AliasMessage realBuild(Type type, String messageId, Date timestamp,
         Map<String, Object> context, Map<String, Object> integrations, String userId,
-        String anonymousId, Segment segment) {
+        String anonymousId) {
       assertNotNullOrEmpty(userId, "userId");
       assertNotNullOrEmpty(previousId, "previousId");
 

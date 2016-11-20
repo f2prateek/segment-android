@@ -8,6 +8,7 @@ import com.squareup.moshi.Moshi;
 import java.util.Date;
 import java.util.Map;
 
+import static com.f2prateek.segment.Utils.assertNotNull;
 import static com.f2prateek.segment.Utils.immutableCopyOf;
 import static com.f2prateek.segment.Utils.isNullOrEmpty;
 
@@ -33,8 +34,8 @@ public abstract class IdentifyMessage extends Message {
   public static class Builder extends Message.Builder<IdentifyMessage, Builder> {
     private Map<String, Object> traits;
 
-    public Builder(@NonNull Segment segment) {
-      super(Type.identify, segment);
+    Builder() {
+      super(Type.identify);
     }
 
     @Private Builder(IdentifyMessage identify) {
@@ -42,20 +43,15 @@ public abstract class IdentifyMessage extends Message {
       traits = identify.traits();
     }
 
-    @Private Builder() {
-      super(Type.identify);
-    }
-
     public Builder traits(@NonNull Map<String, Object> traits) {
-      Utils.assertNotNull(traits, "traits");
+      assertNotNull(traits, "traits");
       this.traits = immutableCopyOf(traits);
-      postEnqueue();
       return this;
     }
 
     @Override protected IdentifyMessage realBuild(Type type, String messageId, Date timestamp,
         Map<String, Object> context, Map<String, Object> integrations, String userId,
-        String anonymousId, Segment segment) {
+        String anonymousId) {
       if (isNullOrEmpty(userId) && isNullOrEmpty(anonymousId) && isNullOrEmpty(anonymousId)) {
         throw new NullPointerException("either userId or anonymousId or traits are required");
       }

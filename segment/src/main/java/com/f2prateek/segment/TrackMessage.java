@@ -12,6 +12,7 @@ import java.util.Map;
 import static com.f2prateek.segment.Utils.assertNotNull;
 import static com.f2prateek.segment.Utils.assertNotNullOrEmpty;
 import static com.f2prateek.segment.Utils.immutableCopyOf;
+import static com.f2prateek.segment.Utils.isNullOrEmpty;
 
 /**
  * The track API call is how you record any actions your users perform, along with any properties
@@ -38,8 +39,8 @@ public abstract class TrackMessage extends Message {
     private String event;
     private Map<String, Object> properties;
 
-    public Builder(@NonNull Segment segment) {
-      super(Type.track, segment);
+    Builder() {
+      super(Type.track);
     }
 
     @Private Builder(TrackMessage track) {
@@ -48,30 +49,24 @@ public abstract class TrackMessage extends Message {
       properties = track.properties();
     }
 
-    @Private Builder() {
-      super(Type.track);
-    }
-
     public Builder event(@NonNull String event) {
       this.event = assertNotNullOrEmpty(event, "event");
-      postEnqueue();
       return this;
     }
 
     public Builder properties(@NonNull Map<String, Object> properties) {
       assertNotNull(properties, "properties");
       this.properties = immutableCopyOf(properties);
-      postEnqueue();
       return this;
     }
 
     @Override protected TrackMessage realBuild(Type type, String messageId, Date timestamp,
         Map<String, Object> context, Map<String, Object> integrations, String userId,
-        String anonymousId, Segment segment) {
+        String anonymousId) {
       assertNotNullOrEmpty(event, "event");
 
       Map<String, Object> properties = this.properties;
-      if (Utils.isNullOrEmpty(properties)) {
+      if (isNullOrEmpty(properties)) {
         properties = Collections.emptyMap();
       }
 

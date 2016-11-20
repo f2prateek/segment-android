@@ -9,8 +9,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 
+import static com.f2prateek.segment.Utils.assertNotNull;
 import static com.f2prateek.segment.Utils.assertNotNullOrEmpty;
 import static com.f2prateek.segment.Utils.immutableCopyOf;
+import static com.f2prateek.segment.Utils.isNullOrEmpty;
 
 /**
  * The group API call is how you associate an individual user with a group—be it a company,
@@ -40,8 +42,8 @@ public abstract class GroupMessage extends Message {
     private String groupId;
     private Map<String, Object> traits;
 
-    public Builder(@NonNull Segment segment) {
-      super(Type.group, segment);
+    Builder() {
+      super(Type.group);
     }
 
     @Private Builder(GroupMessage group) {
@@ -50,30 +52,24 @@ public abstract class GroupMessage extends Message {
       traits = group.traits();
     }
 
-    @Private Builder() {
-      super(Type.group);
-    }
-
     public @NonNull Builder groupId(@NonNull String groupId) {
       this.groupId = assertNotNullOrEmpty(groupId, "groupId");
-      postEnqueue();
       return this;
     }
 
     public Builder traits(@NonNull Map<String, Object> traits) {
-      Utils.assertNotNull(traits, "traits");
+      assertNotNull(traits, "traits");
       this.traits = immutableCopyOf(traits);
-      postEnqueue();
       return this;
     }
 
     @Override protected GroupMessage realBuild(Type type, String messageId, Date timestamp,
         Map<String, Object> context, Map<String, Object> integrations, String userId,
-        String anonymousId, Segment segment) {
+        String anonymousId) {
       assertNotNullOrEmpty(groupId, "groupId");
 
       Map<String, Object> traits = this.traits;
-      if (Utils.isNullOrEmpty(traits)) {
+      if (isNullOrEmpty(traits)) {
         traits = Collections.emptyMap();
       }
 

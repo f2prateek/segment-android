@@ -20,4 +20,8 @@ class StringCache {
   @Nullable String get() {
     return sharedPreferences.getString(key, null);
   }
+
+  void clear() {
+    sharedPreferences.edit().remove(key).apply();
+  }
 }

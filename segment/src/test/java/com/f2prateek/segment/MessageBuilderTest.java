@@ -8,10 +8,12 @@ import org.junit.runner.RunWith;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.fail;
 
+@SuppressWarnings("ConstantConditions") //
 @RunWith(BurstJUnit4.class) //
 public class MessageBuilderTest {
 
-  @SuppressWarnings("unchecked") enum MessageBuilder {
+  @SuppressWarnings("unchecked") //
+  enum MessageBuilder {
     ALIAS {
       @Override public AliasMessage.Builder get() {
         return new AliasMessage.Builder().previousId("previousId");

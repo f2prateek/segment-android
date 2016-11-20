@@ -41,16 +41,6 @@ final class Utils {
     return map == null || map.size() == 0;
   }
 
-  /** Get the string resource for the given key. Returns null if not found. */
-  static @Nullable String getStringResource(@NonNull Context context, @NonNull String key) {
-    int id = context.getResources().getIdentifier(key, "string", context.getPackageName());
-    if (id != 0) {
-      return context.getResources().getString(id);
-    } else {
-      return null;
-    }
-  }
-
   /** Returns true if the application has the given permission. */
   static boolean hasPermission(Context context, String permission) {
     return context.checkCallingOrSelfPermission(permission) == PERMISSION_GRANTED;

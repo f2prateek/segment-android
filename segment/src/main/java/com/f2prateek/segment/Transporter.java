@@ -11,10 +11,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import retrofit2.Response;
-import segment.BuildConfig;
 
 class Transporter {
-  private static final Map<String, Object> DEFAULT_CONTEXT = new LinkedHashMap<>();
+  @Private static final Map<String, Object> DEFAULT_CONTEXT = new LinkedHashMap<>();
 
   static {
     Map<String, String> library = new LinkedHashMap<>();

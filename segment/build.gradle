@@ -35,6 +35,8 @@ dependencies {
   testCompile deps.truth
   testCompile deps.robolectric
   testCompile deps.burst
+  testCompile deps.mockWebServer
+  testCompile deps.mockito
 }
 
 apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
