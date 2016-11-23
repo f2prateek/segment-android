@@ -37,7 +37,7 @@ public abstract class Message {
   @NonNull public abstract Builder toBuilder();
 
   /** Fluent API to construct instances of a {@link Message}. */
-  static abstract class Builder<T extends Message, V extends Builder> {
+  public static abstract class Builder<T extends Message, V extends Builder> {
     @NonNull final Message.Type type;
     String messageId;
     Date timestamp;
@@ -107,7 +107,7 @@ public abstract class Message {
      *
      * @see <a href="https://segment.com/docs/spec/common/#integrations">Integrations</a>
      */
-    @CheckResult public @NonNull V enableIntegration(@NonNull String key, boolean enable) {
+    @CheckResult public @NonNull V integration(@NonNull String key, boolean enable) {
       assertNotNullOrEmpty(key, "key");
       if (integrationsBuilder == null) {
         integrationsBuilder = new LinkedHashMap<>();
@@ -122,7 +122,7 @@ public abstract class Message {
      *
      * @see <a href="https://segment.com/docs/spec/common/#integrations">Integrations</a>
      */
-    @CheckResult public @NonNull V enableIntegration(@NonNull String key,
+    @CheckResult public @NonNull V integration(@NonNull String key,
         @NonNull Map<String, Object> options) {
       assertNotNullOrEmpty(key, "key");
       assertNotNull(options, "options");

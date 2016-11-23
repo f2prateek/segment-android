@@ -171,8 +171,8 @@ public class MessageBuilderTest {
   @Test public void integrations(MessageBuilder builder) {
     Message message = builder.get()
         .userId("userId")
-        .enableIntegration("foo", false)
-        .enableIntegration("bar", ImmutableMap.of("qaz", "qux"))
+        .integration("foo", false)
+        .integration("bar", ImmutableMap.of("qaz", "qux"))
         .build();
 
     assertThat(message.integrations()).hasSize(2);
