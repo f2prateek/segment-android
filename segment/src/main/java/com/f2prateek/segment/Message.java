@@ -67,7 +67,7 @@ public abstract class Message {
      *
      * @see <a href="https://segment.com/docs/spec/common/">Common Fields</a>
      */
-    @CheckResult public @NonNull V messageId(String messageId) {
+    public @NonNull V messageId(String messageId) {
       this.messageId = assertNotNullOrEmpty(messageId, "messageId");
       return self();
     }
@@ -80,7 +80,7 @@ public abstract class Message {
      *
      * @see <a href="https://segment.com/docs/spec/common/#-timestamp-">Timestamp</a>
      */
-    @CheckResult @NonNull V timestamp(Date timestamp) {
+    @NonNull V timestamp(Date timestamp) {
       this.timestamp = assertNotNull(timestamp, "timestamp");
       return self();
     }
@@ -95,7 +95,7 @@ public abstract class Message {
      *
      * @see <a href="https://segment.com/docs/spec/common/#context">Context</a>
      */
-    @CheckResult public @NonNull V context(@NonNull Map<String, Object> context) {
+    public @NonNull V context(@NonNull Map<String, Object> context) {
       assertNotNull(context, "context");
       this.context = immutableCopyOf(context);
       return self();
@@ -107,7 +107,7 @@ public abstract class Message {
      *
      * @see <a href="https://segment.com/docs/spec/common/#integrations">Integrations</a>
      */
-    @CheckResult public @NonNull V integration(@NonNull String key, boolean enable) {
+    public @NonNull V integration(@NonNull String key, boolean enable) {
       assertNotNullOrEmpty(key, "key");
       if (integrationsBuilder == null) {
         integrationsBuilder = new LinkedHashMap<>();
@@ -122,8 +122,7 @@ public abstract class Message {
      *
      * @see <a href="https://segment.com/docs/spec/common/#integrations">Integrations</a>
      */
-    @CheckResult public @NonNull V integration(@NonNull String key,
-        @NonNull Map<String, Object> options) {
+    public @NonNull V integration(@NonNull String key, @NonNull Map<String, Object> options) {
       assertNotNullOrEmpty(key, "key");
       assertNotNull(options, "options");
       if (integrationsBuilder == null) {
@@ -143,7 +142,7 @@ public abstract class Message {
      * @see <a href="https://segment.com/docs/spec/identify/#identities">Identities</a>
      * @see <a href="https://segment.com/docs/spec/identify/#anonymous-id">Anonymous ID</a>
      */
-    @CheckResult @NonNull V anonymousId(@NonNull String anonymousId) {
+    @NonNull V anonymousId(@NonNull String anonymousId) {
       this.anonymousId = assertNotNullOrEmpty(anonymousId, "anonymousId");
       return self();
     }
@@ -157,7 +156,7 @@ public abstract class Message {
      * @see <a href="https://segment.com/docs/spec/identify/#identities">Identities</a>
      * @see <a href="https://segment.com/docs/spec/identify/#user-id">User ID</a>
      */
-    @CheckResult @NonNull V userId(@NonNull String userId) {
+    @NonNull V userId(@NonNull String userId) {
       this.userId = assertNotNullOrEmpty(userId, "userId");
       return self();
     }

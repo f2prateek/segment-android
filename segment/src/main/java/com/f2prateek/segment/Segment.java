@@ -145,7 +145,7 @@ public final class Segment {
    * interceptors may change this behaviour.
    */
   public @Nullable Future<Message> enqueue(Message message) {
-    Interceptor.Chain chain = new RealInterceptor(0, message, interceptors, transporter);
+    Interceptor.Chain chain = new RealInterceptorChain(0, message, interceptors, transporter);
     return chain.proceed(message);
   }
 

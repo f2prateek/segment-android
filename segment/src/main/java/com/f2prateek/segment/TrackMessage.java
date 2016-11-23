@@ -1,6 +1,5 @@
 package com.f2prateek.segment;
 
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.google.auto.value.AutoValue;
@@ -50,12 +49,12 @@ public abstract class TrackMessage extends Message {
       properties = track.properties();
     }
 
-    @CheckResult public @NonNull Builder event(@NonNull String event) {
+    public @NonNull Builder event(@NonNull String event) {
       this.event = assertNotNullOrEmpty(event, "event");
       return this;
     }
 
-    @CheckResult public Builder properties(@NonNull Map<String, Object> properties) {
+    public Builder properties(@NonNull Map<String, Object> properties) {
       assertNotNull(properties, "properties");
       this.properties = immutableCopyOf(properties);
       return this;
