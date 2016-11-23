@@ -3,9 +3,7 @@ package com.f2prateek.segment;
 import android.Manifest;
 import android.app.Application;
 import com.squareup.moshi.Moshi;
-import com.squareup.moshi.Rfc3339DateJsonAdapter;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -62,10 +60,7 @@ public class SegmentTest {
       assertThat(request.getHeader("Authorization")).isEqualTo("Basic d3JpdGVLZXk6");
 
       // TODO: Use proper fixtures. Currently IDs and timestamps are not consistent between runs.
-      final Moshi moshi = new Moshi.Builder() //
-          .add(SegmentMoshiAdapterFactory.create()) //
-          .add(Date.class, new Rfc3339DateJsonAdapter()) //
-          .build();
+      final Moshi moshi = SegmentMoshiAdapterFactory.MOSHI;
       Batch batch = moshi.adapter(Batch.class).fromJson(request.getBody());
       assertThat(batch.batch()).hasSize(1);
       assertThat(batch.batch().get(0)).isEqualTo(m);

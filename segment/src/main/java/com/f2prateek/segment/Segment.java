@@ -7,14 +7,12 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.moshi.Moshi;
-import com.squareup.moshi.Rfc3339DateJsonAdapter;
 import com.squareup.tape2.ObjectQueue;
 import com.squareup.tape2.QueueFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -291,10 +289,7 @@ public final class Segment {
         baseUrl = DEFAULT_BASE_URL;
       }
 
-      final Moshi moshi = new Moshi.Builder() //
-          .add(SegmentMoshiAdapterFactory.create()) //
-          .add(Date.class, new Rfc3339DateJsonAdapter()) //
-          .build();
+      final Moshi moshi = SegmentMoshiAdapterFactory.MOSHI;
 
       ObjectQueue<Message> queue = this.queue;
       if (queue == null) {

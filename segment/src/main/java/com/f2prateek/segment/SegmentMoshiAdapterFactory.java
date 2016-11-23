@@ -5,6 +5,7 @@ import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.JsonWriter;
 import com.squareup.moshi.Moshi;
+import com.squareup.moshi.Rfc3339DateJsonAdapter;
 import com.squareup.moshi.Types;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -15,6 +16,11 @@ import java.util.Set;
 
 @MoshiAdapterFactory //
 abstract class SegmentMoshiAdapterFactory implements JsonAdapter.Factory {
+  static final Moshi MOSHI = new Moshi.Builder() //
+      .add(SegmentMoshiAdapterFactory.create()) //
+      .add(Date.class, new Rfc3339DateJsonAdapter()) //
+      .build();
+
   static JsonAdapter.Factory create() {
     final JsonAdapter.Factory generatedFactory = new AutoValueMoshi_SegmentMoshiAdapterFactory();
     final JsonAdapter.Factory messageJsonAdapterFactory = new JsonAdapter.Factory() {
