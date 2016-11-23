@@ -1,5 +1,6 @@
 package com.f2prateek.segment;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.google.auto.value.AutoValue;
@@ -43,7 +44,7 @@ public abstract class IdentifyMessage extends Message {
       traits = identify.traits();
     }
 
-    public Builder traits(@NonNull Map<String, Object> traits) {
+    @CheckResult public @NonNull Builder traits(@NonNull Map<String, Object> traits) {
       assertNotNull(traits, "traits");
       this.traits = immutableCopyOf(traits);
       return this;

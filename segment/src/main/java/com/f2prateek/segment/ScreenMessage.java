@@ -1,5 +1,6 @@
 package com.f2prateek.segment;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.google.auto.value.AutoValue;
@@ -9,6 +10,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 
+import static com.f2prateek.segment.Utils.assertNotNull;
 import static com.f2prateek.segment.Utils.assertNotNullOrEmpty;
 import static com.f2prateek.segment.Utils.immutableCopyOf;
 import static com.f2prateek.segment.Utils.isNullOrEmpty;
@@ -48,13 +50,13 @@ public abstract class ScreenMessage extends Message {
       properties = screen.properties();
     }
 
-    public Builder name(@NonNull String name) {
+    @CheckResult public @NonNull Builder name(@NonNull String name) {
       this.name = assertNotNullOrEmpty(name, "name");
       return this;
     }
 
-    public Builder properties(@NonNull Map<String, Object> properties) {
-      Utils.assertNotNull(properties, "properties");
+    @CheckResult public @NonNull Builder properties(@NonNull Map<String, Object> properties) {
+      assertNotNull(properties, "properties");
       this.properties = immutableCopyOf(properties);
       return this;
     }

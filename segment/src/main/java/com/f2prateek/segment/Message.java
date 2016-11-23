@@ -1,7 +1,6 @@
 package com.f2prateek.segment;
 
-import android.os.Handler;
-import android.os.Looper;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.util.Collections;
@@ -68,7 +67,7 @@ public abstract class Message {
      *
      * @see <a href="https://segment.com/docs/spec/common/">Common Fields</a>
      */
-    public V messageId(String messageId) {
+    @CheckResult public @NonNull V messageId(String messageId) {
       this.messageId = assertNotNullOrEmpty(messageId, "messageId");
       return self();
     }
@@ -81,7 +80,7 @@ public abstract class Message {
      *
      * @see <a href="https://segment.com/docs/spec/common/#-timestamp-">Timestamp</a>
      */
-    V timestamp(Date timestamp) {
+    @CheckResult @NonNull V timestamp(Date timestamp) {
       this.timestamp = assertNotNull(timestamp, "timestamp");
       return self();
     }
@@ -96,7 +95,7 @@ public abstract class Message {
      *
      * @see <a href="https://segment.com/docs/spec/common/#context">Context</a>
      */
-    public @NonNull V context(@NonNull Map<String, Object> context) {
+    @CheckResult public @NonNull V context(@NonNull Map<String, Object> context) {
       assertNotNull(context, "context");
       this.context = immutableCopyOf(context);
       return self();
@@ -108,7 +107,7 @@ public abstract class Message {
      *
      * @see <a href="https://segment.com/docs/spec/common/#integrations">Integrations</a>
      */
-    public @NonNull V enableIntegration(@NonNull String key, boolean enable) {
+    @CheckResult public @NonNull V enableIntegration(@NonNull String key, boolean enable) {
       assertNotNullOrEmpty(key, "key");
       if (integrationsBuilder == null) {
         integrationsBuilder = new LinkedHashMap<>();
@@ -123,7 +122,8 @@ public abstract class Message {
      *
      * @see <a href="https://segment.com/docs/spec/common/#integrations">Integrations</a>
      */
-    public @NonNull V enableIntegration(@NonNull String key, @NonNull Map<String, Object> options) {
+    @CheckResult public @NonNull V enableIntegration(@NonNull String key,
+        @NonNull Map<String, Object> options) {
       assertNotNullOrEmpty(key, "key");
       assertNotNull(options, "options");
       if (integrationsBuilder == null) {
@@ -143,7 +143,7 @@ public abstract class Message {
      * @see <a href="https://segment.com/docs/spec/identify/#identities">Identities</a>
      * @see <a href="https://segment.com/docs/spec/identify/#anonymous-id">Anonymous ID</a>
      */
-    V anonymousId(@NonNull String anonymousId) {
+    @CheckResult @NonNull V anonymousId(@NonNull String anonymousId) {
       this.anonymousId = assertNotNullOrEmpty(anonymousId, "anonymousId");
       return self();
     }
@@ -157,7 +157,7 @@ public abstract class Message {
      * @see <a href="https://segment.com/docs/spec/identify/#identities">Identities</a>
      * @see <a href="https://segment.com/docs/spec/identify/#user-id">User ID</a>
      */
-    V userId(@NonNull String userId) {
+    @CheckResult @NonNull V userId(@NonNull String userId) {
       this.userId = assertNotNullOrEmpty(userId, "userId");
       return self();
     }
@@ -169,7 +169,7 @@ public abstract class Message {
     abstract V self();
 
     /** Create a {@link Message} instance. */
-    public @NonNull T build() {
+    @CheckResult public @NonNull T build() {
       assertNotNull(type, "type");
 
       if (isNullOrEmpty(userId) && isNullOrEmpty(anonymousId)) {

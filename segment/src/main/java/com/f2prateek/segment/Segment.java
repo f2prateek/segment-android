@@ -3,6 +3,7 @@ package com.f2prateek.segment;
 import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.moshi.Moshi;
@@ -73,7 +74,7 @@ public final class Segment {
    * the previousId if you have called identify, or the anonymous ID.
    * @see <a href="https://segment.com/docs/tracking-api/alias/">Alias Documentation</a>
    */
-  public @NonNull AliasMessage.Builder newAlias(@NonNull String newId) {
+  @CheckResult public @NonNull AliasMessage.Builder newAlias(@NonNull String newId) {
     String previousId = userIdCache.get();
     if (isNullOrEmpty(previousId)) {
       previousId = assertNotNullOrEmpty(anonymousIdCache.get(), "anonymousId");
@@ -89,7 +90,7 @@ public final class Segment {
    * be null or empty.
    * @see <a href="https://segment.com/docs/tracking-api/group/">Group Documentation</a>
    */
-  public @NonNull GroupMessage.Builder newGroup(@NonNull String groupId) {
+  @CheckResult public @NonNull GroupMessage.Builder newGroup(@NonNull String groupId) {
     return lift(new GroupMessage.Builder()).groupId(groupId);
   }
 
@@ -100,7 +101,7 @@ public final class Segment {
    * @param userId Unique identifier which you recognize a user by in your own database.
    * @see <a href="https://segment.com/docs/tracking-api/identify/">Identify Documentation</a>
    */
-  public @NonNull IdentifyMessage.Builder newIdentify(@NonNull String userId) {
+  @CheckResult public @NonNull IdentifyMessage.Builder newIdentify(@NonNull String userId) {
     userIdCache.set(userId);
     return lift(new IdentifyMessage.Builder());
   }
@@ -112,7 +113,8 @@ public final class Segment {
    * @param traits Traits about the user
    * @see <a href="https://segment.com/docs/tracking-api/identify/">Identify Documentation</a>
    */
-  public @NonNull IdentifyMessage.Builder newIdentify(@NonNull Map<String, Object> traits) {
+  @CheckResult public @NonNull IdentifyMessage.Builder newIdentify(
+      @NonNull Map<String, Object> traits) {
     return lift(new IdentifyMessage.Builder()).traits(traits);
   }
 
@@ -123,7 +125,7 @@ public final class Segment {
    * @param name A name for the screen
    * @see <a href="http://segment.com/docs/tracking-api/page-and-screen/">Screen Documentation</a>
    */
-  public @NonNull ScreenMessage.Builder newScreen(@NonNull String name) {
+  @CheckResult public @NonNull ScreenMessage.Builder newScreen(@NonNull String name) {
     return lift(new ScreenMessage.Builder()).name(name);
   }
 
@@ -135,7 +137,7 @@ public final class Segment {
    * @param event Name of the event. Must not be null or empty.
    * @see <a href="https://segment.com/docs/tracking-api/track/">Track Documentation</a>
    */
-  public @NonNull TrackMessage.Builder newTrack(@NonNull String event) {
+  @CheckResult public @NonNull TrackMessage.Builder newTrack(@NonNull String event) {
     return lift(new TrackMessage.Builder()).event(event);
   }
 
@@ -185,7 +187,7 @@ public final class Segment {
      * Provide the context to be used by the client. The context must declare that it uses the
      * {@link Manifest.permission#INTERNET} permission.
      */
-    public @NonNull Builder context(@NonNull Context context) {
+    @CheckResult public @NonNull Builder context(@NonNull Context context) {
       assertNotNull(context, "context");
       if (!hasPermission(context, Manifest.permission.INTERNET)) {
         throw new IllegalArgumentException("INTERNET permission is required.");
@@ -198,13 +200,13 @@ public final class Segment {
      * Provide the writeKey for the client for the Segment project the client should upload events
      * to.
      */
-    public @NonNull Builder writeKey(@NonNull String writeKey) {
+    @CheckResult public @NonNull Builder writeKey(@NonNull String writeKey) {
       this.writeKey = assertNotNullOrEmpty(writeKey, "writeKey");
       return this;
     }
 
     /** Add a {@link Interceptor} for intercepting messages. */
-    public @NonNull Builder interceptor(@NonNull Interceptor interceptor) {
+    @CheckResult public @NonNull Builder interceptor(@NonNull Interceptor interceptor) {
       assertNotNull(interceptor, "interceptor");
       if (interceptors == null) {
         interceptors = new ArrayList<>();
@@ -219,7 +221,7 @@ public final class Segment {
     /**
      * Set the HTTP client to be used for network requests.
      */
-    public @NonNull Builder client(@NonNull OkHttpClient client) {
+    @CheckResult public @NonNull Builder client(@NonNull OkHttpClient client) {
       this.client = assertNotNull(client, "client");
       return this;
     }
@@ -228,7 +230,7 @@ public final class Segment {
      * Provide the queue used by the client. A {@link QueueFile} backed implementation is used by
      * default.
      */
-    public @NonNull Builder queue(@NonNull ObjectQueue<Message> queue) {
+    @CheckResult public @NonNull Builder queue(@NonNull ObjectQueue<Message> queue) {
       this.queue = assertNotNull(queue, "queue");
       return this;
     }
@@ -237,7 +239,7 @@ public final class Segment {
      * Set a base Url that this client should upload events to. Uses {@code https://api.segment.io}
      * by default.
      */
-    public Builder baseUrl(String url) {
+    @CheckResult public @NonNull Builder baseUrl(String url) {
       assertNotNullOrEmpty(url, "url");
       HttpUrl baseUrl = HttpUrl.parse(url);
       if (baseUrl == null) {
@@ -251,12 +253,12 @@ public final class Segment {
      * Set a base Url that this client should upload events to. Uses {@code https://api.segment.io}
      * by default.
      */
-    public Builder baseUrl(HttpUrl baseUrl) {
+    @CheckResult public @NonNull Builder baseUrl(HttpUrl baseUrl) {
       this.baseUrl = assertNotNull(baseUrl, "baseUrl");
       return this;
     }
 
-    @NonNull public Segment build() {
+    @CheckResult public @NonNull Segment build() {
       assertNotNull(context, "context");
       assertNotNull(writeKey, "writeKey");
 

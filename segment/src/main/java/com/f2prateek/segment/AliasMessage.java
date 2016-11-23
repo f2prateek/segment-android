@@ -1,5 +1,6 @@
 package com.f2prateek.segment;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.google.auto.value.AutoValue;
@@ -42,7 +43,7 @@ public abstract class AliasMessage extends Message {
       this.previousId = alias.previousId();
     }
 
-    public @NonNull Builder previousId(@NonNull String previousId) {
+    @CheckResult public @NonNull Builder previousId(@NonNull String previousId) {
       this.previousId = assertNotNullOrEmpty(previousId, "previousId");
       return this;
     }
