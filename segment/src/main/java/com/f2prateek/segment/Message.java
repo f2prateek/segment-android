@@ -38,13 +38,13 @@ public abstract class Message {
 
   /** Fluent API to construct instances of a {@link Message}. */
   public static abstract class Builder<T extends Message, V extends Builder> {
-    @NonNull final Message.Type type;
-    String messageId;
-    Date timestamp;
-    Map<String, Object> context;
-    Map<String, Object> integrationsBuilder;
-    String userId;
-    String anonymousId;
+    private @NonNull final Message.Type type;
+    private String messageId;
+    private Date timestamp;
+    private Map<String, Object> context;
+    private Map<String, Object> integrationsBuilder;
+    private String userId;
+    private String anonymousId;
 
     Builder(@NonNull Type type) {
       this.type = type;

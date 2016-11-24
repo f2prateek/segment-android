@@ -3,7 +3,6 @@ package com.f2prateek.segment;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -49,5 +48,16 @@ final class Utils {
   /** Returns an immutable copy of the provided map. */
   static @NonNull <K, V> Map<K, V> immutableCopyOf(@NonNull Map<K, V> map) {
     return Collections.unmodifiableMap(new LinkedHashMap<>(map));
+  }
+
+  /** Returns the system service for the given string. */
+  @SuppressWarnings("unchecked") public static <T> T getSystemService(Context context,
+      String serviceConstant) {
+    return (T) context.getSystemService(serviceConstant);
+  }
+
+  /** Returns true if the application has the given feature. */
+  public static boolean hasFeature(Context context, String feature) {
+    return context.getPackageManager().hasSystemFeature(feature);
   }
 }
