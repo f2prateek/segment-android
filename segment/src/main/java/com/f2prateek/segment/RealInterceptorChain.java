@@ -24,7 +24,8 @@ class RealInterceptorChain implements Interceptor.Chain {
   @Override public Future<Message> proceed(Message message) {
     // If there's another interceptor in the chain, call that.
     if (index < interceptors.size()) {
-      Interceptor.Chain chain = new RealInterceptorChain(index + 1, message, interceptors, transporter);
+      Interceptor.Chain chain =
+          new RealInterceptorChain(index + 1, message, interceptors, transporter);
       return interceptors.get(index).intercept(chain);
     }
 
