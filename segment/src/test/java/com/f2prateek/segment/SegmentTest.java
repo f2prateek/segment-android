@@ -5,7 +5,10 @@ import android.app.Application;
 import android.support.annotation.Nullable;
 import com.squareup.moshi.Moshi;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -23,6 +26,7 @@ import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowApplication;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricTestRunner.class) //
@@ -98,6 +102,26 @@ public class SegmentTest {
       Batch batch = moshi.adapter(Batch.class).fromJson(request.getBody());
       assertThat(batch.batch()).hasSize(1);
       assertThat(batch.batch().get(0)).isEqualTo(m);
+    }
+  }
+
+  @Test public void disallowsLargeMessages() throws InterruptedException {
+    Segment segment = new Segment.Builder() //
+        .writeKey("writeKey") //
+        .context(RuntimeEnvironment.application) //
+        .baseUrl(server.url("/")) //
+        .build();
+
+    Map<String, Object> properties = new LinkedHashMap<>();
+    for (int i = 0; i < 375; i++) {
+      properties.put("prop_" + i, "abcdefghijklmnopqrstuvwxyz");
+    }
+
+    try {
+      segment.enqueue(segment.newTrack("event").properties(properties).build()).get();
+      fail();
+    } catch (ExecutionException e) {
+      assertThat(e.getCause()).isInstanceOf(MoshiMessageConverter.MessageTooLargeException.class);
     }
   }
 }

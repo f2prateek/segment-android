@@ -291,7 +291,7 @@ public final class Segment {
         try {
           File directory = context.getDir("segment-queue", Context.MODE_PRIVATE);
           File file = new File(directory, writeKey.hashCode() + ".segment");
-          MoshiConverter<Message> converter = new MoshiConverter<>(moshi, Message.class);
+          ObjectQueue.Converter<Message> converter = new MoshiMessageConverter(moshi);
           queue = ObjectQueue.create(file, converter);
         } catch (IOException e) {
           throw new RuntimeException(e);
