@@ -10,6 +10,11 @@ import java.util.concurrent.Future;
 import retrofit2.Response;
 
 class Transporter {
+  // Batch message is limited to 500kb.
+  private static final int MAX_BATCH_SIZE = 500000;
+  // Guarantee delivery by ensuring we don't try to upload more events than we're allowed.
+  private static final int MAX_BATCH_COUNT =
+      MAX_BATCH_SIZE / MoshiMessageConverter.MAX_MESSAGE_SIZE;
   @Private final ObjectQueue<Message> queue;
   @Private final TrackingAPI trackingAPI;
   private final ExecutorService executor;
@@ -32,7 +37,7 @@ class Transporter {
   @NonNull Future<List<Message>> flush() {
     return executor.submit(new Callable<List<Message>>() {
       @Override public List<Message> call() throws Exception {
-        List<Message> messages = queue.asList();
+        List<Message> messages = queue.peek(MAX_BATCH_COUNT);
         final Batch batch = Batch.create(messages);
         Response response = trackingAPI.batch(batch).execute();
         if (response.isSuccessful()) {

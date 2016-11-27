@@ -37,6 +37,7 @@ dependencies {
   testCompile deps.burst
   testCompile deps.mockWebServer
   testCompile deps.mockito
+  testCompile deps.retrofitMock
 }
 
 apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
