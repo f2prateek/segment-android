@@ -120,12 +120,6 @@ public class ContextInterceptor implements Interceptor {
     context.put("screen", screen);
   }
 
-  static <T, V> Map<T, V> merge(Map<T, V> a, Map<T, V> b) {
-    Map<T, V> map = new LinkedHashMap<>(a);
-    map.putAll(b);
-    return map;
-  }
-
   /** Creates a unique device id. */
   static String getDeviceId(Context context) {
     @SuppressLint("HardwareIds") String androidId =
@@ -161,7 +155,7 @@ public class ContextInterceptor implements Interceptor {
         network.put("wifi", wifiInfo != null && wifiInfo.isConnected());
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB_MR2) {
           NetworkInfo bluetoothInfo = connectivityManager.getNetworkInfo(TYPE_BLUETOOTH);
-          network.put("bluetooth", bluetoothInfo.isConnected());
+          network.put("bluetooth", bluetoothInfo != null && bluetoothInfo.isConnected());
         }
         NetworkInfo cellularInfo = connectivityManager.getNetworkInfo(TYPE_MOBILE);
         network.put("cellular", cellularInfo != null && cellularInfo.isConnected());
