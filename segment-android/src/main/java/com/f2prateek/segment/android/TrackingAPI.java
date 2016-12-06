@@ -1,4 +1,4 @@
-package com.f2prateek.segment;
+package com.f2prateek.segment.android;
 
 import com.f2prateek.segment.model.Batch;
 import retrofit2.Call;

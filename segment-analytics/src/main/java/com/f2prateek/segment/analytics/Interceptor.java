@@ -1,4 +1,4 @@
-package com.f2prateek.segment;
+package com.f2prateek.segment.analytics;
 
 import android.support.annotation.Nullable;
 import com.f2prateek.segment.model.Message;

@@ -1,4 +1,4 @@
-package com.f2prateek.segment;
+package com.f2prateek.segment.android;
 
 import android.support.annotation.NonNull;
 import com.f2prateek.segment.model.Batch;

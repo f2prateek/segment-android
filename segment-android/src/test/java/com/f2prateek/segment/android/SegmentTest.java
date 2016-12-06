@@ -1,4 +1,4 @@
-package com.f2prateek.segment;
+package com.f2prateek.segment.android;
 
 import android.Manifest;
 import android.app.Application;

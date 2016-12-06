@@ -1,8 +1,8 @@
 package com.f2prateek.segment.sample;
 
 import android.app.Application;
-import com.f2prateek.segment.ContextInterceptor;
-import com.f2prateek.segment.Segment;
+import com.f2prateek.segment.android.ContextInterceptor;
+import com.f2prateek.segment.android.Segment;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

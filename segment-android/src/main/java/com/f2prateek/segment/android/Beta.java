@@ -1,4 +1,4 @@
-package com.f2prateek.segment;
+package com.f2prateek.segment.android;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;

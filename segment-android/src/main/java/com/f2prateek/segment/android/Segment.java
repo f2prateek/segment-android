@@ -1,4 +1,4 @@
-package com.f2prateek.segment;
+package com.f2prateek.segment.android;
 
 import android.Manifest;
 import android.content.Context;
@@ -30,11 +30,6 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.moshi.MoshiConverterFactory;
 
-import static com.f2prateek.segment.Utils.assertNotNull;
-import static com.f2prateek.segment.Utils.assertNotNullOrEmpty;
-import static com.f2prateek.segment.Utils.hasPermission;
-import static com.f2prateek.segment.Utils.isNullOrEmpty;
-
 public final class Segment {
   private final List<Interceptor> interceptors;
   private final Transporter transporter;
@@ -50,11 +45,11 @@ public final class Segment {
   }
 
   private <T extends Message, V extends Message.Builder> V lift(Message.Builder<T, V> builder) {
-    String anonymousId = assertNotNullOrEmpty(anonymousIdCache.get(), "anonymousId");
+    String anonymousId = Utils.assertNotNullOrEmpty(anonymousIdCache.get(), "anonymousId");
     builder.anonymousId(anonymousId);
 
     String userId = userIdCache.get();
-    if (!isNullOrEmpty(userId)) {
+    if (!Utils.isNullOrEmpty(userId)) {
       builder.userId(userId);
     }
 
@@ -81,8 +76,8 @@ public final class Segment {
    */
   @CheckResult public @NonNull AliasMessage.Builder newAlias(@NonNull String newId) {
     String previousId = userIdCache.get();
-    if (isNullOrEmpty(previousId)) {
-      previousId = assertNotNullOrEmpty(anonymousIdCache.get(), "anonymousId");
+    if (Utils.isNullOrEmpty(previousId)) {
+      previousId = Utils.assertNotNullOrEmpty(anonymousIdCache.get(), "anonymousId");
     }
     return lift(new AliasMessage.Builder()).previousId(previousId).userId(newId);
   }
@@ -189,8 +184,8 @@ public final class Segment {
      * {@link Manifest.permission#INTERNET} permission.
      */
     @CheckResult public @NonNull Builder context(@NonNull Context context) {
-      assertNotNull(context, "context");
-      if (!hasPermission(context, Manifest.permission.INTERNET)) {
+      Utils.assertNotNull(context, "context");
+      if (!Utils.hasPermission(context, Manifest.permission.INTERNET)) {
         throw new IllegalArgumentException("INTERNET permission is required.");
       }
       this.context = context;
@@ -202,13 +197,13 @@ public final class Segment {
      * to.
      */
     @CheckResult public @NonNull Builder writeKey(@NonNull String writeKey) {
-      this.writeKey = assertNotNullOrEmpty(writeKey, "writeKey");
+      this.writeKey = Utils.assertNotNullOrEmpty(writeKey, "writeKey");
       return this;
     }
 
     /** Add a {@link Interceptor} for intercepting messages. */
     @CheckResult public @NonNull Builder interceptor(@NonNull Interceptor interceptor) {
-      assertNotNull(interceptor, "interceptor");
+      Utils.assertNotNull(interceptor, "interceptor");
       if (interceptors == null) {
         interceptors = new ArrayList<>();
       }
@@ -223,7 +218,7 @@ public final class Segment {
      * Set the HTTP client to be used for network requests.
      */
     @CheckResult public @NonNull Builder client(@NonNull OkHttpClient client) {
-      this.client = assertNotNull(client, "client");
+      this.client = Utils.assertNotNull(client, "client");
       return this;
     }
 
@@ -232,7 +227,7 @@ public final class Segment {
      * default.
      */
     @CheckResult public @NonNull Builder queue(@NonNull ObjectQueue<Message> queue) {
-      this.queue = assertNotNull(queue, "queue");
+      this.queue = Utils.assertNotNull(queue, "queue");
       return this;
     }
 
@@ -241,7 +236,7 @@ public final class Segment {
      * by default.
      */
     @CheckResult public @NonNull Builder baseUrl(String url) {
-      assertNotNullOrEmpty(url, "url");
+      Utils.assertNotNullOrEmpty(url, "url");
       HttpUrl baseUrl = HttpUrl.parse(url);
       if (baseUrl == null) {
         throw new AssertionError("url is invalid");
@@ -255,13 +250,13 @@ public final class Segment {
      * by default.
      */
     @CheckResult public @NonNull Builder baseUrl(HttpUrl baseUrl) {
-      this.baseUrl = assertNotNull(baseUrl, "baseUrl");
+      this.baseUrl = Utils.assertNotNull(baseUrl, "baseUrl");
       return this;
     }
 
     @CheckResult public @NonNull Segment build() {
-      assertNotNull(context, "context");
-      assertNotNull(writeKey, "writeKey");
+      Utils.assertNotNull(context, "context");
+      Utils.assertNotNull(writeKey, "writeKey");
 
       List<Interceptor> interceptors;
       if (this.interceptors == null) {
@@ -319,7 +314,7 @@ public final class Segment {
           context.getSharedPreferences("segment_" + writeKey.hashCode(), Context.MODE_PRIVATE);
       StringCache userIdCache = new StringCache(sharedPreferences, "userId");
       StringCache anonymousIdCache = new StringCache(sharedPreferences, "anonymousId");
-      if (isNullOrEmpty(anonymousIdCache.get())) {
+      if (Utils.isNullOrEmpty(anonymousIdCache.get())) {
         anonymousIdCache.set(UUID.randomUUID().toString());
       }
 
