@@ -1,4 +1,5 @@
-include ':segment'
+include ':segment-model'
+include ':segment-android'
 include ':segment-sample'
 
 rootProject.name = 'segment-parent'

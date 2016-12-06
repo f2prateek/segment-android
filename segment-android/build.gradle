@@ -1,0 +1,40 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.neenbedankt.android-apt'
+
+android {
+  compileSdkVersion rootProject.ext.compileSdkVersion
+  buildToolsVersion rootProject.ext.buildToolsVersion
+
+  defaultConfig {
+    minSdkVersion rootProject.ext.minSdkVersion
+    versionName rootProject.ext.versionName
+  }
+
+  lintOptions {
+    disable 'InvalidPackage'
+  }
+
+  testOptions {
+    unitTests.returnDefaultValues = true
+  }
+}
+
+dependencies {
+  compile project(':segment-model')
+
+  compile deps.supportAnnotations
+  compile deps.okhttp
+  compile deps.tape
+  compile deps.retrofit
+  compile deps.retrofitMoshi
+
+  testCompile deps.junit
+  testCompile deps.truth
+  testCompile deps.robolectric
+  testCompile deps.burst
+  testCompile deps.mockWebServer
+  testCompile deps.mockito
+  testCompile deps.retrofitMock
+}
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
