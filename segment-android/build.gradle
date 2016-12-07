@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'jacoco'
 
 android {
   compileSdkVersion rootProject.ext.compileSdkVersion
@@ -17,6 +18,16 @@ android {
   testOptions {
     unitTests.returnDefaultValues = true
   }
+
+  buildTypes {
+    debug {
+      testCoverageEnabled true
+    }
+  }
+}
+
+jacoco {
+  toolVersion = '0.7.7.201606060606'
 }
 
 dependencies {
