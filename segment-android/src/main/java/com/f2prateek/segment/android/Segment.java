@@ -244,7 +244,7 @@ public final class Segment {
       assertNotNullOrEmpty(url, "url");
       HttpUrl baseUrl = HttpUrl.parse(url);
       if (baseUrl == null) {
-        throw new AssertionError("url is invalid");
+        throw new IllegalArgumentException("url is invalid");
       }
       this.baseUrl = baseUrl;
       return this;
