@@ -13,7 +13,7 @@ import retrofit2.Response;
 
 class Transporter {
   // Batch message is limited to 500kb.
-  private static final int MAX_BATCH_SIZE = 500000;
+  private static final int MAX_BATCH_SIZE = 500 << 10;
   // Guarantee delivery by ensuring we don't try to upload more events than we're allowed.
   private static final int MAX_BATCH_COUNT =
       MAX_BATCH_SIZE / MoshiMessageConverter.MAX_MESSAGE_SIZE;

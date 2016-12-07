@@ -17,7 +17,7 @@ import okio.Okio;
  */
 final class MoshiMessageConverter implements ObjectQueue.Converter<Message> {
   // Single message is limited to 15kb.
-  static final int MAX_MESSAGE_SIZE = 15000;
+  static final int MAX_MESSAGE_SIZE = 15 << 10;
 
   private final JsonAdapter<Message> adapter;
 
