@@ -11,7 +11,7 @@ import java.util.concurrent.Future;
    */
   @Nullable Future<Message> intercept(Chain chain);
 
-  interface Chain {
+  @Beta interface Chain {
     Message message();
 
     Future<Message> proceed(Message message);
