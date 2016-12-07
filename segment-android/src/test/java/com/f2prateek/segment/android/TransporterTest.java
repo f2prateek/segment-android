@@ -4,6 +4,7 @@ import com.f2prateek.segment.model.Batch;
 import com.f2prateek.segment.model.Message;
 import com.f2prateek.segment.model.TrackMessage;
 import com.squareup.tape2.ObjectQueue;
+import java.util.concurrent.ExecutionException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,13 +26,38 @@ import static org.mockito.Mockito.when;
 @Config(constants = BuildConfig.class, sdk = 23) //
 public class TransporterTest {
   @Mock TrackingAPI trackingAPI;
+  @Mock Callback callback;
   ObjectQueue<Message> queue;
   Transporter transporter;
 
   @Before public void setUp() {
     MockitoAnnotations.initMocks(this);
     queue = ObjectQueue.createInMemory();
-    transporter = new Transporter(queue, trackingAPI);
+    transporter = new Transporter(queue, trackingAPI, callback);
+  }
+
+  @Test public void invokesCallback() throws ExecutionException, InterruptedException {
+    Message message = new TrackMessage.Builder().userId("userId").event("event").build();
+
+    transporter.enqueue(message).get();
+    verify(callback).success(Callback.Event.PERSIST, message);
+
+    Call<Void> call = Calls.response(Response.success((Void) null));
+    when(trackingAPI.batch(any(Batch.class))).thenReturn(call);
+    transporter.flush().get();
+    verify(callback).success(Callback.Event.UPLOAD, message);
+  }
+
+  @Test public void ignoresNullCallback() throws ExecutionException, InterruptedException {
+    transporter = new Transporter(queue, trackingAPI, null);
+
+    Message message = new TrackMessage.Builder().userId("userId").event("event").build();
+
+    transporter.enqueue(message).get();
+
+    Call<Void> call = Calls.response(Response.success((Void) null));
+    when(trackingAPI.batch(any(Batch.class))).thenReturn(call);
+    transporter.flush().get();
   }
 
   @Test public void trimsBatches() throws Exception {

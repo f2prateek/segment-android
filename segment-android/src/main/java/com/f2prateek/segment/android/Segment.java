@@ -181,6 +181,7 @@ public final class Segment {
     Context context;
     List<Interceptor> interceptors;
     OkHttpClient client;
+    Callback callback;
     HttpUrl baseUrl;
     ObjectQueue<Message> queue;
 
@@ -259,6 +260,12 @@ public final class Segment {
       return this;
     }
 
+    /** Set a callback to invoked for various stages in the message pipeline. */
+    @CheckResult public @NonNull Builder callback(Callback callback) {
+      this.callback = assertNotNull(callback, "callback");
+      return this;
+    }
+
     @CheckResult public @NonNull Segment build() {
       assertNotNull(context, "context");
       assertNotNull(writeKey, "writeKey");
@@ -313,7 +320,7 @@ public final class Segment {
 
       TrackingAPI trackingAPI = retrofit.create(TrackingAPI.class);
 
-      Transporter transporter = new Transporter(queue, trackingAPI);
+      Transporter transporter = new Transporter(queue, trackingAPI, callback);
 
       SharedPreferences sharedPreferences =
           context.getSharedPreferences("segment_" + writeKey.hashCode(), Context.MODE_PRIVATE);
