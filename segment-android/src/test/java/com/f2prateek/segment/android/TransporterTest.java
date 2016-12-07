@@ -4,12 +4,14 @@ import com.f2prateek.segment.model.Batch;
 import com.f2prateek.segment.model.Message;
 import com.f2prateek.segment.model.TrackMessage;
 import com.squareup.tape2.ObjectQueue;
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -19,6 +21,7 @@ import retrofit2.mock.Calls;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -46,6 +49,42 @@ public class TransporterTest {
     when(trackingAPI.batch(any(Batch.class))).thenReturn(call);
     transporter.flush().get();
     verify(callback).success(Callback.Event.UPLOAD, message);
+  }
+
+  @Test public void invokesPersistErrorCallback() throws Exception {
+    queue = mock(ObjectQueue.class);
+    transporter = new Transporter(queue, trackingAPI, callback);
+
+    Message message = new TrackMessage.Builder().userId("userId").event("event").build();
+    IOException testException = new IOException("test");
+
+    Mockito.doThrow(testException).when(queue).add(message);
+
+    try {
+      transporter.enqueue(message).get();
+    } catch (ExecutionException e) {
+      assertThat(e.getCause()).isEqualTo(testException);
+    }
+    verify(callback).error(Callback.Event.PERSIST, message, testException);
+  }
+
+  @Test public void invokesUploadErrorCallback() throws Exception {
+    transporter = new Transporter(queue, trackingAPI, callback);
+
+    Message message = new TrackMessage.Builder().userId("userId").event("event").build();
+    IOException testException = new IOException("test");
+
+    Call<Void> call = Calls.failure(testException);
+    when(trackingAPI.batch(any(Batch.class))).thenReturn(call);
+
+    transporter.enqueue(message).get();
+
+    try {
+      transporter.flush().get();
+    } catch (ExecutionException e) {
+      assertThat(e.getCause()).isEqualTo(testException);
+    }
+    verify(callback).error(Callback.Event.UPLOAD, message, testException);
   }
 
   @Test public void ignoresNullCallback() throws ExecutionException, InterruptedException {

@@ -44,7 +44,7 @@ class Transporter {
           }
         } catch (IOException e) {
           if (callback != null) {
-            callback.failure(PERSIST, message, e);
+            callback.error(PERSIST, message, e);
           }
           throw e;
         }
@@ -72,7 +72,7 @@ class Transporter {
         } catch (IOException e) {
           if (callback != null) {
             for (Message message : messages) {
-              callback.failure(UPLOAD, message, e);
+              callback.error(UPLOAD, message, e);
             }
           }
           throw e;

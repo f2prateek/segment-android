@@ -12,6 +12,6 @@ public interface Callback {
   // Indicates that the event completed successfully for the given message. 
   void success(@NonNull Event event, @NonNull Message message);
 
-  // Indicates that the event failed for the given message. 
-  void failure(@NonNull Event event, @NonNull Message message, @Nullable Throwable error);
+  // Indicates that the event errored for the given message.
+  void error(@NonNull Event event, @NonNull Message message, @Nullable Throwable error);
 }
