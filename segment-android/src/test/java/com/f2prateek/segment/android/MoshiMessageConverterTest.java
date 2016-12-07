@@ -35,7 +35,7 @@ public class MoshiMessageConverterTest {
 
   @Test public void disallowsLargeMessages() throws IOException {
     Map<String, Object> properties = new LinkedHashMap<>();
-    for (int i = 0; i < 374; i++) {
+    for (int i = 0; i < 383; i++) {
       properties.put("prop_" + i, "abcdefghijklmnopqrstuvwxyz");
     }
 
