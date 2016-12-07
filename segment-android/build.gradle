@@ -30,7 +30,7 @@ dependencies {
   compile deps.retrofitMoshi
 
   testCompile deps.junit
-  testCompile deps.truth
+  testCompile deps.assertJ
   testCompile deps.robolectric
   testCompile deps.burst
   testCompile deps.mockWebServer

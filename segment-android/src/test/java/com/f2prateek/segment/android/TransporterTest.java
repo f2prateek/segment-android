@@ -17,7 +17,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.mock.Calls;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -59,7 +59,6 @@ public class TransporterTest {
     when(trackingAPI.batch(any(Batch.class))).thenReturn(call);
     transporter.flush().get();
   }
-
 
   @Test public void trimsBatches() throws Exception {
     for (int i = 0; i < 40; i++) {

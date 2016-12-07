@@ -28,7 +28,7 @@ dependencies {
   provided deps.autoMoshiAnnotations
 
   testCompile deps.junit
-  testCompile deps.truth
+  testCompile deps.assertJ
   testCompile deps.robolectric
   testCompile deps.burst
   testCompile deps.mockito

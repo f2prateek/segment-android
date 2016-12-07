@@ -44,7 +44,7 @@ ext.deps = [
 
     // Test dependencies.
     junit: 'junit:junit:4.12',
-    truth: 'com.google.truth:truth:0.27',
+    assertJ: 'com.squareup.assertj:assertj-android:1.1.1',
     robolectric: 'org.robolectric:robolectric:3.1.4',
     burst: 'com.squareup.burst:burst-junit4:1.1.0',
     mockWebServer: 'com.squareup.okhttp3:mockwebserver:3.4.2',

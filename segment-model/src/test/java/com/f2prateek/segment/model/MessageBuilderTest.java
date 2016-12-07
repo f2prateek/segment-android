@@ -5,7 +5,7 @@ import com.squareup.burst.BurstJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 
 @SuppressWarnings("ConstantConditions") //
@@ -72,6 +72,7 @@ public class MessageBuilderTest {
 
   @Test public void missingUserIdAndAnonymousIdThrowsException(MessageBuilder builder) {
     try {
+      //noinspection CheckResult
       builder.get().build();
       fail();
     } catch (NullPointerException e) {
@@ -126,6 +127,7 @@ public class MessageBuilderTest {
     }
 
     try {
+      //noinspection CheckResult
       new IdentifyMessage.Builder().build();
     } catch (NullPointerException e) {
       assertThat(e).hasMessage("either userId or anonymousId is required");
@@ -140,6 +142,7 @@ public class MessageBuilderTest {
     }
 
     try {
+      //noinspection CheckResult
       new ScreenMessage.Builder().properties(null).build();
     } catch (NullPointerException e) {
       assertThat(e).hasMessage("properties == null");
