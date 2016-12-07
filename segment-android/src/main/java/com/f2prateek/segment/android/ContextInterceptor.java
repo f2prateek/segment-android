@@ -31,6 +31,10 @@ import static android.net.ConnectivityManager.TYPE_MOBILE;
 import static android.net.ConnectivityManager.TYPE_WIFI;
 import static android.provider.Settings.Secure.ANDROID_ID;
 import static android.provider.Settings.Secure.getString;
+import static com.f2prateek.segment.android.Utils.getSystemService;
+import static com.f2prateek.segment.android.Utils.hasFeature;
+import static com.f2prateek.segment.android.Utils.hasPermission;
+import static com.f2prateek.segment.android.Utils.isNullOrEmpty;
 
 public class ContextInterceptor implements Interceptor {
   private static final Map<String, Object> LIBRARY_CONTEXT;
@@ -75,7 +79,7 @@ public class ContextInterceptor implements Interceptor {
     newContext.put("locale", locale.getLanguage() + "-" + locale.getCountry());
 
     Map<String, Object> context = message.context();
-    if (!Utils.isNullOrEmpty(context)) {
+    if (!isNullOrEmpty(context)) {
       newContext.putAll(context);
     }
 
@@ -107,7 +111,7 @@ public class ContextInterceptor implements Interceptor {
 
   private void screen(Map<String, Object> context) {
     Map<String, Object> screen = new LinkedHashMap<>();
-    WindowManager manager = Utils.getSystemService(application, Context.WINDOW_SERVICE);
+    WindowManager manager = getSystemService(application, Context.WINDOW_SERVICE);
     Display display = manager.getDefaultDisplay();
     DisplayMetrics displayMetrics = new DisplayMetrics();
     display.getMetrics(displayMetrics);
@@ -121,21 +125,20 @@ public class ContextInterceptor implements Interceptor {
   static String getDeviceId(Context context) {
     @SuppressLint("HardwareIds") String androidId =
         getString(context.getContentResolver(), ANDROID_ID);
-    if (!Utils.isNullOrEmpty(androidId)) {
+    if (!isNullOrEmpty(androidId)) {
       return androidId;
     }
 
     // Serial number, guaranteed to be on all non phones in 2.3+.
-    if (!Utils.isNullOrEmpty(Build.SERIAL)) {
+    if (!isNullOrEmpty(Build.SERIAL)) {
       return Build.SERIAL;
     }
 
     // Telephony ID, guaranteed to be on all phones, requires READ_PHONE_STATE permission.
-    if (Utils.hasPermission(context, READ_PHONE_STATE) && Utils.hasFeature(context,
-        FEATURE_TELEPHONY)) {
-      TelephonyManager telephonyManager = Utils.getSystemService(context, TELEPHONY_SERVICE);
+    if (hasPermission(context, READ_PHONE_STATE) && hasFeature(context, FEATURE_TELEPHONY)) {
+      TelephonyManager telephonyManager = getSystemService(context, TELEPHONY_SERVICE);
       @SuppressLint("HardwareIds") String telephonyId = telephonyManager.getDeviceId();
-      if (!Utils.isNullOrEmpty(telephonyId)) {
+      if (!isNullOrEmpty(telephonyId)) {
         return telephonyId;
       }
     }
@@ -146,9 +149,8 @@ public class ContextInterceptor implements Interceptor {
 
   private void network(Map<String, Object> context) {
     Map<String, Object> network = new LinkedHashMap<>();
-    if (Utils.hasPermission(application, ACCESS_NETWORK_STATE)) {
-      ConnectivityManager connectivityManager =
-          Utils.getSystemService(application, CONNECTIVITY_SERVICE);
+    if (hasPermission(application, ACCESS_NETWORK_STATE)) {
+      ConnectivityManager connectivityManager = getSystemService(application, CONNECTIVITY_SERVICE);
       if (connectivityManager != null) {
         NetworkInfo wifiInfo = connectivityManager.getNetworkInfo(TYPE_WIFI);
         network.put("wifi", wifiInfo != null && wifiInfo.isConnected());
@@ -161,7 +163,7 @@ public class ContextInterceptor implements Interceptor {
       }
     }
 
-    TelephonyManager telephonyManager = Utils.getSystemService(application, TELEPHONY_SERVICE);
+    TelephonyManager telephonyManager = getSystemService(application, TELEPHONY_SERVICE);
     if (telephonyManager != null) {
       network.put("carrier", telephonyManager.getNetworkOperatorName());
     } else {
