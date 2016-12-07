@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import com.f2prateek.segment.model.AliasMessage;
 import com.f2prateek.segment.model.GroupMessage;
 import com.f2prateek.segment.model.IdentifyMessage;
@@ -75,6 +74,11 @@ public final class Analytics {
     return lift(new AliasMessage.Builder()).previousId(previousId).userId(newId);
   }
 
+  /** Convenience API for {@link #newAlias(String)}. */
+  public void alias(@NonNull String newId) {
+    enqueue(newAlias(newId).build());
+  }
+
   /**
    * The group method lets you associate a user with a group. It also lets you record custom traits
    * about the group, like industry or number of employees.
@@ -85,6 +89,11 @@ public final class Analytics {
    */
   @CheckResult public @NonNull GroupMessage.Builder newGroup(@NonNull String groupId) {
     return lift(new GroupMessage.Builder()).groupId(groupId);
+  }
+
+  /** Convenience API for {@link #newGroup(String)}. */
+  public void group(@NonNull String groupId) {
+    enqueue(newGroup(groupId).build());
   }
 
   /**
@@ -106,9 +115,27 @@ public final class Analytics {
    * @param traits Traits about the user
    * @see <a href="https://segment.com/docs/tracking-api/identify/">Identify Documentation</a>
    */
-  @CheckResult public @NonNull IdentifyMessage.Builder newIdentify(
-      @NonNull Map<String, Object> traits) {
+  @CheckResult //
+  public @NonNull IdentifyMessage.Builder newIdentify(@NonNull Map<String, Object> traits) {
     return lift(new IdentifyMessage.Builder()).traits(traits);
+  }
+
+  /** Convenience API for {@link #newIdentify(String)}. */
+  public void identify(@NonNull String userId) {
+    enqueue(newIdentify(userId).build());
+  }
+
+  /** Convenience API for {@link #newIdentify(Map)}. */
+  public void identify(@NonNull Map<String, Object> traits) {
+    enqueue(newIdentify(traits).build());
+  }
+
+  /**
+   * Convenience API for using {@link #newIdentify(String)} and supplying user traits with {@link
+   * IdentifyMessage.Builder#traits(Map)}.
+   */
+  public void identify(@NonNull String userId, @NonNull Map<String, Object> traits) {
+    enqueue(newIdentify(userId).traits(traits).build());
   }
 
   /**
@@ -120,6 +147,19 @@ public final class Analytics {
    */
   @CheckResult public @NonNull ScreenMessage.Builder newScreen(@NonNull String name) {
     return lift(new ScreenMessage.Builder()).name(name);
+  }
+
+  /** Convenience API for {@link #newScreen(String)}. */
+  public void screen(@NonNull String name) {
+    enqueue(newScreen(name).build());
+  }
+
+  /**
+   * Convenience API for using {@link #newScreen(String)} and supplying properties with {@link
+   * ScreenMessage.Builder#properties(Map)}.
+   */
+  public void screen(@NonNull String name, @NonNull Map<String, Object> properties) {
+    enqueue(newScreen(name).properties(properties).build());
   }
 
   /**
@@ -134,15 +174,28 @@ public final class Analytics {
     return lift(new TrackMessage.Builder()).event(event);
   }
 
+  /** Convenience API for {@link #newTrack(String)}. */
+  public void track(@NonNull String event) {
+    enqueue(newTrack(event).build());
+  }
+
+  /**
+   * Convenience API for using {@link #newTrack(String)} and supplying properties with {@link
+   * TrackMessage.Builder#properties(Map)}.
+   */
+  public void track(@NonNull String name, @NonNull Map<String, Object> properties) {
+    enqueue(newTrack(name).properties(properties).build());
+  }
+
   /**
    * Enqueue a {@link Message} to be uploaded at a later time and
    * returns a Future. By default, the
    * Future's {@link Future#get()} method blocks until the event is queued on disk, but
    * interceptors may change this behaviour.
    */
-  public @Nullable Future<Message> enqueue(Message message) {
+  public void enqueue(Message message) {
     Interceptor.Chain chain = new RealInterceptorChain(0, message, interceptors, integrations);
-    return chain.proceed(message);
+    chain.proceed(message);
   }
 
   /**
