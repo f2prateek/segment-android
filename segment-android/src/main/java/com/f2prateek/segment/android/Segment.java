@@ -148,8 +148,8 @@ public final class Segment {
 
   /**
    * Enqueue a {@link Message} to be uploaded at a later time and returns a Future. By default, the
-   * Future's {@link Future#get()} method blocks until the event is queued on disk, but interceptors
-   * may change this behaviour.
+   * Future's {@link Future#get()} method blocks until the event is queued but interceptors may
+   * change this behaviour.
    */
   public @Nullable Future<Message> enqueue(Message message) {
     Interceptor.Chain chain = new RealInterceptorChain(0, message, interceptors, transporter);
@@ -308,7 +308,7 @@ public final class Segment {
           ObjectQueue.Converter<Message> converter = new MoshiMessageConverter(moshi);
           queue = ObjectQueue.create(file, converter);
         } catch (IOException e) {
-          throw new RuntimeException(e);
+          queue = ObjectQueue.createInMemory();
         }
       }
 
