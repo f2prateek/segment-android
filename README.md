@@ -4,11 +4,9 @@ Simple and *unofficial* Android wrapper for the [Segment HTTP API](https://segme
 
 If you're a Segment user, you should use the [official `analytics-android` library](https://segment.com/docs/sources/mobile/android/), which is better maintained, has more features and quicker support.
 
-## Motivations
+## analytics-android
 
-`segment-android` is a playground for pre-release features planned in `analytics-android`. You'll get access to less stable but potentially more powerful features. 
-
-Compared to `analytics-android`, `segment-android` library only handles queueing, batching and uploading messages for you. `segment-android` does not support bundled integrations (so you can't use tools like Flurry with it without extra work). `segment-android` does not [automatically instrument events](https://segment.com/docs/spec/mobile/).
+Compared to `analytics-android`, `segment-android` library only handles queueing, batching and uploading messages to Segment for you. `segment-android` does not support bundled integrations (so you can't use tools like Flurry with it without extra work). `segment-android` does not [automatically instrument events](https://segment.com/docs/spec/mobile/).
 
 `analytics-android` has 0 dependencies. It's pretty lightweight, but this makes some of the core in `analytics-android` larger than `segment-android`, since it has to write more complex HTTP logic, JSON parsing and persistence code. `segment-android` simply delegates this work to [OkHttp](https://github.com/square/okhttp) + [Retrofit](https://github.com/square/retrofit), [Moshi](https://github.com/square/moshi) and [Tape](https://github.com/square/tape). This makes the `segment-android` *core* much lighter. If you are using these libraries already, `segment-android` will add minimal weight to your app. If you aren't, `segment-android` will be much heavier for your app since it will add these dependencies into your app.
 
