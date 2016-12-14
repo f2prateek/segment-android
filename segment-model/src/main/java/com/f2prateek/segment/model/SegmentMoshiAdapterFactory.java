@@ -121,6 +121,7 @@ public abstract class SegmentMoshiAdapterFactory implements JsonAdapter.Factory 
       String groupId = null;
 
       // Identify fields.
+      // None.
 
       // Group and Identify fields
       Map<String, Object> traits = null;
