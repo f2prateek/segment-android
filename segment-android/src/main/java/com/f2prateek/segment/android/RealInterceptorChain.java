@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.concurrent.Future;
 
 class RealInterceptorChain implements Interceptor.Chain {
-  int index;
+  private final int index;
   final Message message;
-  final List<Interceptor> interceptors;
+  private final List<Interceptor> interceptors;
   final Transporter transporter;
 
   RealInterceptorChain(int index, Message message, List<Interceptor> interceptors,
