@@ -40,8 +40,6 @@ public class ContextInterceptor implements Interceptor {
   private static final Map<String, Object> LIBRARY_CONTEXT;
   private static final Map<String, Object> OS_CONTEXT;
 
-  private final Context application;
-
   static {
     Map<String, Object> library = new LinkedHashMap<>();
     library.put("name", "segment-android");
@@ -54,29 +52,43 @@ public class ContextInterceptor implements Interceptor {
     OS_CONTEXT = Collections.unmodifiableMap(os);
   }
 
+  private final Map<String, Object> staticContext;
+  private final Context application;
+
   public static Interceptor with(Context context) {
     return new ContextInterceptor(context);
   }
 
   private ContextInterceptor(Context context) {
     this.application = context;
+    staticContext = buildStaticContext();
+  }
+
+  // Builds a context objects with fields that don't change in the duration of an app session.
+  private Map<String, Object> buildStaticContext() {
+    Map<String, Object> staticContext = new LinkedHashMap<>();
+    staticContext.put("library", LIBRARY_CONTEXT);
+    staticContext.put("os", OS_CONTEXT);
+    staticContext.put("userAgent", System.getProperty("http.agent"));
+    staticContext.put("timezone", TimeZone.getDefault().getID());
+    Locale locale = Locale.getDefault();
+    staticContext.put("locale", locale.getLanguage() + "-" + locale.getCountry());
+    app(staticContext);
+    device(staticContext);
+    screen(staticContext);
+    return Collections.unmodifiableMap(staticContext);
   }
 
   @Nullable @Override public Future<Message> intercept(Chain chain) {
     Message message = chain.message();
     Message.Builder builder = message.toBuilder();
 
+    Map<String, Object> liveContext = new LinkedHashMap<>();
+    network(liveContext);
+
     Map<String, Object> newContext = new LinkedHashMap<>();
-    app(newContext);
-    device(newContext);
-    network(newContext);
-    screen(newContext);
-    newContext.put("library", LIBRARY_CONTEXT);
-    newContext.put("os", OS_CONTEXT);
-    newContext.put("userAgent", System.getProperty("http.agent"));
-    newContext.put("timezone", TimeZone.getDefault().getID());
-    Locale locale = Locale.getDefault();
-    newContext.put("locale", locale.getLanguage() + "-" + locale.getCountry());
+    newContext.putAll(staticContext);
+    newContext.putAll(liveContext);
 
     Map<String, Object> context = message.context();
     if (!isNullOrEmpty(context)) {
