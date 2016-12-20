@@ -1,5 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'com.vanniktech.android.junit.jacoco'
+apply plugin: 'com.getkeepsafe.dexcount'
 
 android {
   compileSdkVersion rootProject.ext.compileSdkVersion
