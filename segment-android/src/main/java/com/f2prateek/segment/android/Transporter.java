@@ -58,7 +58,7 @@ class Transporter {
     return executor.submit(new Callable<List<Message>>() {
       @Override public List<Message> call() throws Exception {
         List<Message> messages = queue.peek(MAX_BATCH_COUNT);
-        final Batch batch = Batch.create(messages);
+        final Batch batch = new Batch.Builder().batch(messages).build();
         try {
           Response response = trackingAPI.batch(batch).execute();
           if (response.isSuccessful()) {

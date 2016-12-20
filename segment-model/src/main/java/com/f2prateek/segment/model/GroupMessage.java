@@ -2,14 +2,14 @@ package com.f2prateek.segment.model;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.google.auto.value.AutoValue;
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 
+import static com.f2prateek.segment.model.Utils.assertNotNull;
 import static com.f2prateek.segment.model.Utils.assertNotNullOrEmpty;
+import static com.f2prateek.segment.model.Utils.immutableCopyOf;
+import static com.f2prateek.segment.model.Utils.isNullOrEmpty;
 
 /**
  * The group API call is how you associate an individual user with a group—be it a company,
@@ -20,18 +20,106 @@ import static com.f2prateek.segment.model.Utils.assertNotNullOrEmpty;
  *
  * @see <a href="https://segment.com/docs/spec/group/">Group</a>
  */
-@AutoValue //
-public abstract class GroupMessage extends Message {
-  public abstract @Nullable String groupId();
+public final class GroupMessage extends Message {
+  private final String groupId;
+  private final Map<String, Object> traits;
 
-  public abstract @Nullable Map<String, Object> traits();
+  @Private GroupMessage(Type type, String messageId, Date timestamp, Map<String, Object> context,
+      Map<String, Object> integrations, String userId, String anonymousId, String groupId,
+      Map<String, Object> traits) {
+    super(type, messageId, timestamp, context, integrations, userId, anonymousId);
+    this.groupId = groupId;
+    this.traits = traits;
+  }
+
+  public @Nullable String groupId() {
+    return groupId;
+  }
+
+  public @Nullable Map<String, Object> traits() {
+    return traits;
+  }
 
   @NonNull @Override public Builder toBuilder() {
     return new Builder(this);
   }
 
-  public static JsonAdapter<GroupMessage> jsonAdapter(Moshi moshi) {
-    return new AutoValue_GroupMessage.MoshiJsonAdapter(moshi);
+  @Override public String toString() {
+    return "GroupMessage{"
+        + "type="
+        + type
+        + ", "
+        + "messageId="
+        + messageId
+        + ", "
+        + "timestamp="
+        + timestamp
+        + ", "
+        + "context="
+        + context
+        + ", "
+        + "integrations="
+        + integrations
+        + ", "
+        + "userId="
+        + userId
+        + ", "
+        + "anonymousId="
+        + anonymousId
+        + ", "
+        + "groupId="
+        + groupId
+        + ", "
+        + "traits="
+        + traits
+        + "}";
+  }
+
+  @Override public boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    }
+    if (o instanceof GroupMessage) {
+      GroupMessage that = (GroupMessage) o;
+      return (this.type.equals(that.type()))
+          && ((this.messageId == null) ? (that.messageId()
+          == null) : this.messageId.equals(that.messageId()))
+          && ((this.timestamp == null) ? (that.timestamp() == null)
+          : this.timestamp.equals(that.timestamp()))
+          && ((this.context == null) ? (that.context() == null)
+          : this.context.equals(that.context()))
+          && ((this.integrations == null) ? (that.integrations() == null)
+          : this.integrations.equals(that.integrations()))
+          && ((this.userId == null) ? (that.userId() == null) : this.userId.equals(that.userId()))
+          && ((this.anonymousId == null) ? (that.anonymousId() == null)
+          : this.anonymousId.equals(that.anonymousId()))
+          && (this.groupId.equals(that.groupId()))
+          && ((this.traits == null) ? (that.traits() == null) : this.traits.equals(that.traits()));
+    }
+    return false;
+  }
+
+  @Override public int hashCode() {
+    int h = 1;
+    h *= 1000003;
+    h ^= this.type.hashCode();
+    h *= 1000003;
+    h ^= (messageId == null) ? 0 : this.messageId.hashCode();
+    h *= 1000003;
+    h ^= (timestamp == null) ? 0 : this.timestamp.hashCode();
+    h *= 1000003;
+    h ^= (context == null) ? 0 : this.context.hashCode();
+    h *= 1000003;
+    h ^= (integrations == null) ? 0 : this.integrations.hashCode();
+    h *= 1000003;
+    h ^= (userId == null) ? 0 : this.userId.hashCode();
+    h *= 1000003;
+    h ^= (anonymousId == null) ? 0 : this.anonymousId.hashCode();
+    h *= 1000003;
+    h ^= this.groupId.hashCode();
+    h *= 1000003;
+    h ^= (traits == null) ? 0 : this.traits.hashCode();
+    return h;
   }
 
   /** Fluent API for creating {@link GroupMessage} instances. */
@@ -55,8 +143,8 @@ public abstract class GroupMessage extends Message {
     }
 
     public @NonNull Builder traits(@NonNull Map<String, Object> traits) {
-      Utils.assertNotNull(traits, "traits");
-      this.traits = Utils.immutableCopyOf(traits);
+      assertNotNull(traits, "traits");
+      this.traits = immutableCopyOf(traits);
       return this;
     }
 
@@ -66,11 +154,11 @@ public abstract class GroupMessage extends Message {
       assertNotNullOrEmpty(groupId, "groupId");
 
       Map<String, Object> traits = this.traits;
-      if (Utils.isNullOrEmpty(traits)) {
+      if (isNullOrEmpty(traits)) {
         traits = Collections.emptyMap();
       }
 
-      return new AutoValue_GroupMessage(type, messageId, timestamp, context, integrations, userId,
+      return new GroupMessage(type, messageId, timestamp, context, integrations, userId,
           anonymousId, groupId, traits);
     }
 

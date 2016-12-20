@@ -25,9 +25,6 @@ dependencies {
   compile deps.supportAnnotations
   compile deps.moshi
   compile deps.moshiAdapters
-  compile deps.auto
-  apt deps.autoMoshi
-  provided deps.autoMoshiAnnotations
 
   testCompile deps.junit
   testCompile deps.assertJ

@@ -1,6 +1,5 @@
 package com.f2prateek.segment.model;
 
-import com.ryanharter.auto.value.moshi.MoshiAdapterFactory;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.JsonWriter;
@@ -14,7 +13,6 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
-@MoshiAdapterFactory //
 public abstract class SegmentMoshiAdapterFactory implements JsonAdapter.Factory {
   static final Moshi MOSHI = new Moshi.Builder() //
       .add(SegmentMoshiAdapterFactory.create()) //
@@ -26,7 +24,6 @@ public abstract class SegmentMoshiAdapterFactory implements JsonAdapter.Factory 
   }
 
   static JsonAdapter.Factory create() {
-    final JsonAdapter.Factory generatedFactory = new AutoValueMoshi_SegmentMoshiAdapterFactory();
     final JsonAdapter.Factory messageJsonAdapterFactory = new JsonAdapter.Factory() {
       @Override
       public JsonAdapter<?> create(Type type, Set<? extends Annotation> annotations, Moshi moshi) {
@@ -38,11 +35,6 @@ public abstract class SegmentMoshiAdapterFactory implements JsonAdapter.Factory 
     return new JsonAdapter.Factory() {
       @Override
       public JsonAdapter<?> create(Type type, Set<? extends Annotation> annotations, Moshi moshi) {
-        JsonAdapter<?> adapter = generatedFactory.create(type, annotations, moshi);
-        if (adapter != null) {
-          return adapter;
-        }
-
         return messageJsonAdapterFactory.create(type, annotations, moshi);
       }
     };
@@ -203,20 +195,20 @@ public abstract class SegmentMoshiAdapterFactory implements JsonAdapter.Factory 
 
       switch (type) {
         case alias:
-          return new AutoValue_AliasMessage(type, messageId, timestamp, context, integrations,
-              userId, anonymousId, previousId);
+          return new AliasMessage(type, messageId, timestamp, context, integrations, userId,
+              anonymousId, previousId);
         case group:
-          return new AutoValue_GroupMessage(type, messageId, timestamp, context, integrations,
-              userId, anonymousId, groupId, traits);
+          return new GroupMessage(type, messageId, timestamp, context, integrations, userId,
+              anonymousId, groupId, traits);
         case identify:
-          return new AutoValue_IdentifyMessage(type, messageId, timestamp, context, integrations,
-              userId, anonymousId, traits);
+          return new IdentifyMessage(type, messageId, timestamp, context, integrations, userId,
+              anonymousId, traits);
         case screen:
-          return new AutoValue_ScreenMessage(type, messageId, timestamp, context, integrations,
-              userId, anonymousId, name, properties);
+          return new ScreenMessage(type, messageId, timestamp, context, integrations, userId,
+              anonymousId, name, properties);
         case track:
-          return new AutoValue_TrackMessage(type, messageId, timestamp, context, integrations,
-              userId, anonymousId, event, properties);
+          return new TrackMessage(type, messageId, timestamp, context, integrations, userId,
+              anonymousId, event, properties);
         default:
           throw new AssertionError("unknown message type: " + type);
       }

@@ -20,19 +20,52 @@ public abstract class Message {
     identify, group, track, screen, alias
   }
 
-  public abstract @NonNull Type type();
+  protected final Type type;
+  protected final String messageId;
+  protected final Date timestamp;
+  protected final Map<String, Object> context;
+  protected final Map<String, Object> integrations;
+  protected final String userId;
+  protected final String anonymousId;
 
-  public abstract @Nullable String messageId();
+  Message(Type type, String messageId, Date timestamp, Map<String, Object> context,
+      Map<String, Object> integrations, String userId, String anonymousId) {
+    this.type = type;
+    this.messageId = messageId;
+    this.timestamp = timestamp;
+    this.context = context;
+    this.integrations = integrations;
+    this.userId = userId;
+    this.anonymousId = anonymousId;
+  }
 
-  public abstract @Nullable Date timestamp();
+  public final @NonNull Type type() {
+    return type;
+  }
 
-  public abstract @Nullable Map<String, Object> context();
+  public final @Nullable String messageId() {
+    return messageId;
+  }
 
-  public abstract @Nullable Map<String, Object> integrations();
+  public final @Nullable Date timestamp() {
+    return timestamp;
+  }
 
-  public abstract @Nullable String userId();
+  public final @Nullable Map<String, Object> context() {
+    return context;
+  }
 
-  public abstract @Nullable String anonymousId();
+  public final @Nullable Map<String, Object> integrations() {
+    return integrations;
+  }
+
+  public final @Nullable String userId() {
+    return userId;
+  }
+
+  public final @Nullable String anonymousId() {
+    return anonymousId;
+  }
 
   public abstract @NonNull Builder toBuilder();
 

@@ -2,11 +2,10 @@ package com.f2prateek.segment.model;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.google.auto.value.AutoValue;
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
 import java.util.Date;
 import java.util.Map;
+
+import static com.f2prateek.segment.model.Utils.assertNotNullOrEmpty;
 
 /**
  * The alias message is used to merge two user identities, effectively connecting two sets of user
@@ -15,20 +14,99 @@ import java.util.Map;
  *
  * @see <a href="https://segment.com/docs/spec/alias/">Alias</a>
  */
-@AutoValue //
-public abstract class AliasMessage extends Message {
-  public abstract @Nullable String previousId();
+public final class AliasMessage extends Message {
+  private final String previousId;
+
+  @Private AliasMessage(Message.Type type, String messageId, Date timestamp,
+      Map<String, Object> context, Map<String, Object> integrations, String userId,
+      String anonymousId, String previousId) {
+    super(type, messageId, timestamp, context, integrations, userId, anonymousId);
+    this.previousId = previousId;
+  }
+
+  public @Nullable String previousId() {
+    return previousId;
+  }
 
   @Override public @NonNull Builder toBuilder() {
     return new Builder(this);
   }
 
-  public static JsonAdapter<AliasMessage> jsonAdapter(Moshi moshi) {
-    return new AutoValue_AliasMessage.MoshiJsonAdapter(moshi);
+  @Override public String toString() {
+    return "AliasMessage{"
+        + "type="
+        + type
+        + ", "
+        + "messageId="
+        + messageId
+        + ", "
+        + "timestamp="
+        + timestamp
+        + ", "
+        + "context="
+        + context
+        + ", "
+        + "integrations="
+        + integrations
+        + ", "
+        + "userId="
+        + userId
+        + ", "
+        + "anonymousId="
+        + anonymousId
+        + ", "
+        + "previousId="
+        + previousId
+        + "}";
+  }
+
+  @Override public boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    }
+    if (o instanceof AliasMessage) {
+      AliasMessage that = (AliasMessage) o;
+      return (this.type.equals(that.type()))
+          && ((this.messageId == null) ? (that.messageId()
+          == null) : this.messageId.equals(that.messageId()))
+          && ((this.timestamp == null) ? (that.timestamp() == null)
+          : this.timestamp.equals(that.timestamp()))
+          && ((this.context == null) ? (that.context() == null)
+          : this.context.equals(that.context()))
+          && ((this.integrations == null) ? (that.integrations() == null)
+          : this.integrations.equals(that.integrations()))
+          && ((this.userId == null) ? (that.userId() == null) : this.userId.equals(that.userId()))
+          && ((this.anonymousId == null) ? (that.anonymousId() == null)
+          : this.anonymousId.equals(that.anonymousId()))
+          && ((this.previousId == null) ? (that.previousId() == null)
+          : this.previousId.equals(that.previousId()));
+    }
+    return false;
+  }
+
+  @Override public int hashCode() {
+    int h = 1;
+    h *= 1000003;
+    h ^= this.type.hashCode();
+    h *= 1000003;
+    h ^= (messageId == null) ? 0 : this.messageId.hashCode();
+    h *= 1000003;
+    h ^= (timestamp == null) ? 0 : this.timestamp.hashCode();
+    h *= 1000003;
+    h ^= (context == null) ? 0 : this.context.hashCode();
+    h *= 1000003;
+    h ^= (integrations == null) ? 0 : this.integrations.hashCode();
+    h *= 1000003;
+    h ^= (userId == null) ? 0 : this.userId.hashCode();
+    h *= 1000003;
+    h ^= (anonymousId == null) ? 0 : this.anonymousId.hashCode();
+    h *= 1000003;
+    h ^= (previousId == null) ? 0 : this.previousId.hashCode();
+    return h;
   }
 
   /** Fluent API for creating {@link AliasMessage} instances. */
-  public static class Builder extends Message.Builder<AliasMessage, Builder> {
+  public final static class Builder extends Message.Builder<AliasMessage, Builder> {
     private String previousId;
 
     public Builder() {
@@ -41,17 +119,17 @@ public abstract class AliasMessage extends Message {
     }
 
     public @NonNull Builder previousId(@NonNull String previousId) {
-      this.previousId = Utils.assertNotNullOrEmpty(previousId, "previousId");
+      this.previousId = assertNotNullOrEmpty(previousId, "previousId");
       return this;
     }
 
     @Override protected AliasMessage realBuild(Type type, String messageId, Date timestamp,
         Map<String, Object> context, Map<String, Object> integrations, String userId,
         String anonymousId) {
-      Utils.assertNotNullOrEmpty(userId, "userId");
-      Utils.assertNotNullOrEmpty(previousId, "previousId");
+      assertNotNullOrEmpty(userId, "userId");
+      assertNotNullOrEmpty(previousId, "previousId");
 
-      return new AutoValue_AliasMessage(type, messageId, timestamp, context, integrations, userId,
+      return new AliasMessage(type, messageId, timestamp, context, integrations, userId,
           anonymousId, previousId);
     }
 
