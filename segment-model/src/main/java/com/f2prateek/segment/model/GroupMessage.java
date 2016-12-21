@@ -32,7 +32,7 @@ public final class GroupMessage extends Message {
     this.traits = traits;
   }
 
-  public @Nullable String groupId() {
+  public @NonNull String groupId() {
     return groupId;
   }
 

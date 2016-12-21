@@ -1,7 +1,7 @@
 package com.f2prateek.segment.android;
 
+import com.f2prateek.segment.model.JsonAdapter;
 import com.f2prateek.segment.model.Message;
-import com.f2prateek.segment.model.SegmentMoshiAdapterFactory;
 import com.f2prateek.segment.model.TrackMessage;
 import com.squareup.tape2.ObjectQueue;
 import java.io.File;
@@ -28,8 +28,7 @@ public class MoshiMessageConverterTest {
     File parent = folder.getRoot();
     File file = new File(parent, "segment-queue");
 
-    ObjectQueue.Converter<Message> converter =
-        new MoshiMessageConverter(SegmentMoshiAdapterFactory.moshi());
+    ObjectQueue.Converter<Message> converter = new MessageObjectQueueConverter();
     queue = ObjectQueue.create(file, converter);
   }
 
@@ -45,7 +44,7 @@ public class MoshiMessageConverterTest {
           .properties(properties)
           .build());
       fail();
-    } catch (MoshiMessageConverter.MessageTooLargeException ignored) {
+    } catch (JsonAdapter.MessageTooLargeException ignored) {
     }
   }
 }

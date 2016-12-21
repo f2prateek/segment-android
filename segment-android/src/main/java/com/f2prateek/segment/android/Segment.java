@@ -11,9 +11,7 @@ import com.f2prateek.segment.model.GroupMessage;
 import com.f2prateek.segment.model.IdentifyMessage;
 import com.f2prateek.segment.model.Message;
 import com.f2prateek.segment.model.ScreenMessage;
-import com.f2prateek.segment.model.SegmentMoshiAdapterFactory;
 import com.f2prateek.segment.model.TrackMessage;
-import com.squareup.moshi.Moshi;
 import com.squareup.tape2.ObjectQueue;
 import com.squareup.tape2.QueueFile;
 import java.io.File;
@@ -28,7 +26,6 @@ import okhttp3.Credentials;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
-import retrofit2.converter.moshi.MoshiConverterFactory;
 
 import static com.f2prateek.segment.android.Utils.assertNotNull;
 import static com.f2prateek.segment.android.Utils.assertNotNullOrEmpty;
@@ -298,14 +295,12 @@ public final class Segment {
         baseUrl = DEFAULT_BASE_URL;
       }
 
-      final Moshi moshi = SegmentMoshiAdapterFactory.moshi();
-
       ObjectQueue<Message> queue = this.queue;
       if (queue == null) {
         try {
           File directory = context.getDir("segment-queue", Context.MODE_PRIVATE);
           File file = new File(directory, writeKey.hashCode() + ".segment");
-          ObjectQueue.Converter<Message> converter = new MoshiMessageConverter(moshi);
+          ObjectQueue.Converter<Message> converter = new MessageObjectQueueConverter();
           queue = ObjectQueue.create(file, converter);
         } catch (IOException e) {
           queue = ObjectQueue.createInMemory();
@@ -314,7 +309,7 @@ public final class Segment {
 
       Retrofit retrofit = new Retrofit.Builder().client(client) //
           .baseUrl(baseUrl) //
-          .addConverterFactory(MoshiConverterFactory.create(moshi)) //
+          .addConverterFactory(new MessageRetrofitConverterFactory()) //
           .build();
 
       TrackingAPI trackingAPI = retrofit.create(TrackingAPI.class);

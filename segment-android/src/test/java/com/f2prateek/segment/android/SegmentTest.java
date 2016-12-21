@@ -3,10 +3,7 @@ package com.f2prateek.segment.android;
 import android.Manifest;
 import android.app.Application;
 import android.support.annotation.Nullable;
-import com.f2prateek.segment.model.Batch;
 import com.f2prateek.segment.model.Message;
-import com.f2prateek.segment.model.SegmentMoshiAdapterFactory;
-import com.squareup.moshi.Moshi;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Future;
@@ -96,11 +93,8 @@ public class SegmentTest {
       //noinspection SpellCheckingInspection
       assertThat(request.getHeader("Authorization")).isEqualTo("Basic d3JpdGVLZXk6");
 
-      // TODO: Use proper fixtures. Currently IDs and timestamps are not consistent between runs.
-      final Moshi moshi = SegmentMoshiAdapterFactory.moshi();
-      Batch batch = moshi.adapter(Batch.class).fromJson(request.getBody());
-      assertThat(batch.batch()).hasSize(1);
-      assertThat(batch.batch().get(0)).isEqualTo(m);
+      // TODO: Use proper fixtures.
+      assertThat(request.getBody().readUtf8()).contains(m.messageId());
     }
   }
 }

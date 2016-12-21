@@ -3,6 +3,7 @@ package com.f2prateek.segment.android;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.f2prateek.segment.model.Batch;
+import com.f2prateek.segment.model.JsonAdapter;
 import com.f2prateek.segment.model.Message;
 import com.squareup.tape2.ObjectQueue;
 import java.io.IOException;
@@ -17,11 +18,6 @@ import static com.f2prateek.segment.android.Callback.Event.PERSIST;
 import static com.f2prateek.segment.android.Callback.Event.UPLOAD;
 
 class Transporter {
-  // Batch message is limited to 500kb.
-  private static final int MAX_BATCH_SIZE = 500 << 10;
-  // Guarantee delivery by ensuring we don't try to upload more events than we're allowed.
-  private static final int MAX_BATCH_COUNT =
-      MAX_BATCH_SIZE / MoshiMessageConverter.MAX_MESSAGE_SIZE;
   @Private final ObjectQueue<Message> queue;
   @Private final TrackingAPI trackingAPI;
   private final ExecutorService executor;
@@ -57,7 +53,7 @@ class Transporter {
   @NonNull Future<List<Message>> flush() {
     return executor.submit(new Callable<List<Message>>() {
       @Override public List<Message> call() throws Exception {
-        List<Message> messages = queue.peek(MAX_BATCH_COUNT);
+        List<Message> messages = queue.peek(JsonAdapter.MAX_BATCH_COUNT);
         final Batch batch = new Batch.Builder().batch(messages).build();
         try {
           Response response = trackingAPI.batch(batch).execute();

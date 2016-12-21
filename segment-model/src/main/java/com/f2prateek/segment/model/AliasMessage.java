@@ -1,7 +1,6 @@
 package com.f2prateek.segment.model;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import java.util.Date;
 import java.util.Map;
 
@@ -24,7 +23,7 @@ public final class AliasMessage extends Message {
     this.previousId = previousId;
   }
 
-  public @Nullable String previousId() {
+  public @NonNull String previousId() {
     return previousId;
   }
 
@@ -76,8 +75,7 @@ public final class AliasMessage extends Message {
           && ((this.integrations == null) ? (that.integrations() == null)
           : this.integrations.equals(that.integrations()))
           && ((this.userId == null) ? (that.userId() == null) : this.userId.equals(that.userId()))
-          && ((this.anonymousId == null) ? (that.anonymousId() == null)
-          : this.anonymousId.equals(that.anonymousId()))
+          && (this.anonymousId.equals(that.anonymousId()))
           && ((this.previousId == null) ? (that.previousId() == null)
           : this.previousId.equals(that.previousId()));
     }
@@ -101,7 +99,7 @@ public final class AliasMessage extends Message {
     h *= 1000003;
     h ^= (anonymousId == null) ? 0 : this.anonymousId.hashCode();
     h *= 1000003;
-    h ^= (previousId == null) ? 0 : this.previousId.hashCode();
+    h ^= this.previousId.hashCode();
     return h;
   }
 

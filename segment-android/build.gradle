@@ -28,7 +28,6 @@ dependencies {
   compile deps.okhttp
   compile deps.tape
   compile deps.retrofit
-  compile deps.retrofitMoshi
 
   testCompile deps.junit
   testCompile deps.assertJ

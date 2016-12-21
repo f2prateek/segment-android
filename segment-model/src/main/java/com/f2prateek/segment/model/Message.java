@@ -20,13 +20,13 @@ public abstract class Message {
     identify, group, track, screen, alias
   }
 
-  protected final Type type;
-  protected final String messageId;
-  protected final Date timestamp;
-  protected final Map<String, Object> context;
-  protected final Map<String, Object> integrations;
-  protected final String userId;
-  protected final String anonymousId;
+  final Type type;
+  final String messageId;
+  final Date timestamp;
+  final Map<String, Object> context;
+  final Map<String, Object> integrations;
+  final String userId;
+  final String anonymousId;
 
   Message(Type type, String messageId, Date timestamp, Map<String, Object> context,
       Map<String, Object> integrations, String userId, String anonymousId) {
