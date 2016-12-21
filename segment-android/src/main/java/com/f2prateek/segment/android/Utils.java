@@ -51,13 +51,13 @@ final class Utils {
   }
 
   /** Returns the system service for the given string. */
-  @SuppressWarnings("unchecked") public static <T> T getSystemService(Context context,
+  @SuppressWarnings("unchecked") static <T> T getSystemService(Context context,
       String serviceConstant) {
     return (T) context.getSystemService(serviceConstant);
   }
 
   /** Returns true if the application has the given feature. */
-  public static boolean hasFeature(Context context, String feature) {
+  static boolean hasFeature(Context context, String feature) {
     return context.getPackageManager().hasSystemFeature(feature);
   }
 }

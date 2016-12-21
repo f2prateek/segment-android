@@ -23,7 +23,8 @@ public class SegmentBuilderTest {
     new Segment.Builder().interceptor(interceptor).interceptor(interceptor);
   }
 
-  @Test(expected = NullPointerException.class) public void nullInterceptor() throws Exception {
+  @SuppressWarnings("ConstantConditions") @Test(expected = NullPointerException.class)
+  public void nullInterceptor() throws Exception {
     new Segment.Builder().interceptor(null);
   }
 
@@ -31,11 +32,13 @@ public class SegmentBuilderTest {
     new Segment.Builder().context(RuntimeEnvironment.application);
   }
 
-  @Test(expected = NullPointerException.class) public void nullClient() throws Exception {
+  @SuppressWarnings("ConstantConditions") @Test(expected = NullPointerException.class)
+  public void nullClient() throws Exception {
     new Segment.Builder().client(null);
   }
 
-  @Test(expected = NullPointerException.class) public void nullQueue() throws Exception {
+  @SuppressWarnings("ConstantConditions") @Test(expected = NullPointerException.class)
+  public void nullQueue() throws Exception {
     new Segment.Builder().queue(null);
   }
 

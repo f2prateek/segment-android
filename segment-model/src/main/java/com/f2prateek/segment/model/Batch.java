@@ -36,7 +36,9 @@ public final class Batch {
     }
     if (o instanceof Batch) {
       Batch that = (Batch) o;
-      return (this.batch.equals(that.batch())) && (this.sentAt.equals(that.sentAt()));
+
+      return (this.batch.equals(that.batch())) //
+          && ((this.sentAt == null) ? (that.sentAt() == null) : this.sentAt.equals(that.sentAt()));
     }
     return false;
   }
@@ -46,7 +48,7 @@ public final class Batch {
     h *= 1000003;
     h ^= this.batch.hashCode();
     h *= 1000003;
-    h ^= this.sentAt.hashCode();
+    h ^= (sentAt == null) ? 0 : this.sentAt.hashCode();
     return h;
   }
 

@@ -319,7 +319,7 @@ final class JsonUtils {
 
   /** Reads the {@link JsonReader} into a {@link Map}. */
   private static Map<String, Object> readerToMap(JsonReader reader) throws IOException {
-    Map<String, Object> map = new LinkedHashMap<String, Object>();
+    Map<String, Object> map = new LinkedHashMap<>();
     reader.beginObject();
     while (reader.hasNext()) {
       map.put(reader.nextName(), readValue(reader));
@@ -331,7 +331,7 @@ final class JsonUtils {
   /** Reads the {@link JsonReader} into a {@link List}. */
   private static List<Object> readerToList(JsonReader reader) throws IOException {
     // todo: try to infer the type of the List?
-    List<Object> list = new ArrayList<Object>();
+    List<Object> list = new ArrayList<>();
     reader.beginArray();
     while (reader.hasNext()) {
       list.add(readValue(reader));

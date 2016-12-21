@@ -61,6 +61,7 @@ public class SegmentTest {
     for (Message m : messages) {
       Mockito.reset(interceptor);
 
+      //noinspection ConstantConditions
       segment.enqueue(m).get();
 
       ArgumentCaptor<Interceptor.Chain> chainArgumentCaptor =
@@ -85,6 +86,7 @@ public class SegmentTest {
     for (Message m : messages) {
       server.enqueue(new MockResponse());
 
+      //noinspection ConstantConditions
       segment.enqueue(m).get();
       segment.flush().get();
 

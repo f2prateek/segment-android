@@ -13,6 +13,7 @@
  */
 package com.f2prateek.segment.android;
 
+import android.support.annotation.NonNull;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -43,7 +44,7 @@ final class CountingOutputStream extends FilterOutputStream {
     return count;
   }
 
-  @Override public void write(byte[] b, int off, int len) throws IOException {
+  @Override public void write(@NonNull byte[] b, int off, int len) throws IOException {
     out.write(b, off, len);
     count += len;
   }

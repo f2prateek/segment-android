@@ -6,6 +6,7 @@ import com.f2prateek.segment.model.Batch;
 import com.f2prateek.segment.model.Message;
 import com.squareup.tape2.ObjectQueue;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -53,7 +54,7 @@ class Transporter {
     return executor.submit(new Callable<List<Message>>() {
       @Override public List<Message> call() throws Exception {
         List<Message> messages = queue.peek(JsonUtils.MAX_BATCH_COUNT);
-        final Batch batch = new Batch.Builder().batch(messages).build();
+        final Batch batch = new Batch.Builder().batch(messages).sentAt(new Date()).build();
         try {
           Response response = trackingAPI.batch(batch).execute();
           if (response.isSuccessful()) {

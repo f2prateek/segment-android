@@ -52,6 +52,7 @@ public class TransporterTest {
   }
 
   @Test public void invokesPersistErrorCallback() throws Exception {
+    //noinspection unchecked
     queue = mock(ObjectQueue.class);
     transporter = new Transporter(queue, trackingAPI, callback);
 
