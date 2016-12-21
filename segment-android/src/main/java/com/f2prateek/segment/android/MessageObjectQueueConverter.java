@@ -2,7 +2,6 @@ package com.f2prateek.segment.android;
 
 import android.util.JsonReader;
 import android.util.JsonWriter;
-import com.f2prateek.segment.model.JsonAdapter;
 import com.f2prateek.segment.model.Message;
 import com.squareup.tape2.ObjectQueue;
 import java.io.ByteArrayInputStream;
@@ -16,18 +15,18 @@ final class MessageObjectQueueConverter implements ObjectQueue.Converter<Message
   @Override public Message from(byte[] bytes) throws IOException {
     InputStream is = new ByteArrayInputStream(bytes);
     JsonReader reader = new JsonReader(new InputStreamReader(is));
-    return JsonAdapter.fromJson(reader);
+    return JsonUtils.fromJson(reader);
   }
 
   @Override public void toStream(Message m, OutputStream bytes) throws IOException {
     CountingOutputStream countingOutputStream = new CountingOutputStream(bytes);
     JsonWriter writer = new JsonWriter(new OutputStreamWriter(countingOutputStream));
-    JsonAdapter.toJson(writer, m);
+    JsonUtils.toJson(writer, m);
     writer.close();
 
     long count = countingOutputStream.getCount();
-    if (count > JsonAdapter.MAX_MESSAGE_SIZE) {
-      throw new JsonAdapter.MessageTooLargeException(m, count);
+    if (count > JsonUtils.MAX_MESSAGE_SIZE) {
+      throw new JsonUtils.MessageTooLargeException(m, count);
     }
   }
 }

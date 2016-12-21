@@ -14,11 +14,11 @@ import static com.f2prateek.segment.model.Utils.assertNotNullOrEmpty;
  * @see <a href="https://segment.com/docs/spec/alias/">Alias</a>
  */
 public final class AliasMessage extends Message {
-  private final String previousId;
+  private @NonNull final String previousId;
 
   @Private AliasMessage(Message.Type type, String messageId, Date timestamp,
       Map<String, Object> context, Map<String, Object> integrations, String userId,
-      String anonymousId, String previousId) {
+      String anonymousId, @NonNull String previousId) {
     super(type, messageId, timestamp, context, integrations, userId, anonymousId);
     this.previousId = previousId;
   }

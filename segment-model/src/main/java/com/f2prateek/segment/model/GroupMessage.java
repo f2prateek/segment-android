@@ -21,12 +21,12 @@ import static com.f2prateek.segment.model.Utils.isNullOrEmpty;
  * @see <a href="https://segment.com/docs/spec/group/">Group</a>
  */
 public final class GroupMessage extends Message {
-  private final String groupId;
-  private final Map<String, Object> traits;
+  private @NonNull final String groupId;
+  private @Nullable final Map<String, Object> traits;
 
   @Private GroupMessage(Type type, String messageId, Date timestamp, Map<String, Object> context,
-      Map<String, Object> integrations, String userId, String anonymousId, String groupId,
-      Map<String, Object> traits) {
+      Map<String, Object> integrations, String userId, String anonymousId, @NonNull String groupId,
+      @Nullable Map<String, Object> traits) {
     super(type, messageId, timestamp, context, integrations, userId, anonymousId);
     this.groupId = groupId;
     this.traits = traits;

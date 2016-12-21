@@ -1,3 +1,5 @@
+package com.f2prateek.segment.android;
+
 /*
  * Copyright (C) 2011 FasterXML, LLC
  *
@@ -13,7 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.f2prateek.segment.model;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.TimeZone;
+
 
 import java.util.Calendar;
 import java.util.Date;

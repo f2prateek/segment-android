@@ -3,7 +3,6 @@ package com.f2prateek.segment.android;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.f2prateek.segment.model.Batch;
-import com.f2prateek.segment.model.JsonAdapter;
 import com.f2prateek.segment.model.Message;
 import com.squareup.tape2.ObjectQueue;
 import java.io.IOException;
@@ -53,7 +52,7 @@ class Transporter {
   @NonNull Future<List<Message>> flush() {
     return executor.submit(new Callable<List<Message>>() {
       @Override public List<Message> call() throws Exception {
-        List<Message> messages = queue.peek(JsonAdapter.MAX_BATCH_COUNT);
+        List<Message> messages = queue.peek(JsonUtils.MAX_BATCH_COUNT);
         final Batch batch = new Batch.Builder().batch(messages).build();
         try {
           Response response = trackingAPI.batch(batch).execute();

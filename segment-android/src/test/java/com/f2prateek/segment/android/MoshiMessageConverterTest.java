@@ -1,6 +1,5 @@
 package com.f2prateek.segment.android;
 
-import com.f2prateek.segment.model.JsonAdapter;
 import com.f2prateek.segment.model.Message;
 import com.f2prateek.segment.model.TrackMessage;
 import com.squareup.tape2.ObjectQueue;
@@ -44,7 +43,7 @@ public class MoshiMessageConverterTest {
           .properties(properties)
           .build());
       fail();
-    } catch (JsonAdapter.MessageTooLargeException ignored) {
+    } catch (JsonUtils.MessageTooLargeException ignored) {
     }
   }
 }

@@ -166,6 +166,20 @@ public abstract class Message {
     }
 
     /**
+     * Specify a dictionary of options for integrations.
+     *
+     * @see <a href="https://segment.com/docs/spec/common/#integrations">Integrations</a>
+     */
+    public @NonNull V integrations(@NonNull Map<String, Object> integrations) {
+      assertNotNullOrEmpty(integrations, "integrations");
+      if (integrationsBuilder == null) {
+        integrationsBuilder = new LinkedHashMap<>();
+      }
+      integrationsBuilder.putAll(integrations);
+      return self();
+    }
+
+    /**
      * The Anonymous ID is a pseudo-unique substitute for a User ID, for cases when you don’t have
      * an absolutely unique identifier.
      *
