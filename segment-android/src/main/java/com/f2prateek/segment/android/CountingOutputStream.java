@@ -26,7 +26,7 @@ import java.io.OutputStream;
  * @author Chris Nokleberg
  * @since 1.0
  */
-public final class CountingOutputStream extends FilterOutputStream {
+final class CountingOutputStream extends FilterOutputStream {
   private long count;
 
   /**
@@ -34,12 +34,12 @@ public final class CountingOutputStream extends FilterOutputStream {
    *
    * @param out the output stream to be wrapped
    */
-  public CountingOutputStream(OutputStream out) {
+  CountingOutputStream(OutputStream out) {
     super(Utils.assertNotNull(out, "out"));
   }
 
   /** Returns the number of bytes written. */
-  public long getCount() {
+  long getCount() {
     return count;
   }
 
