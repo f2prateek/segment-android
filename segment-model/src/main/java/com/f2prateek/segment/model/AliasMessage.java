@@ -14,7 +14,7 @@ import static com.f2prateek.segment.model.Utils.assertNotNullOrEmpty;
  * @see <a href="https://segment.com/docs/spec/alias/">Alias</a>
  */
 public final class AliasMessage extends Message {
-  private @NonNull final String previousId;
+  private @NonNull String previousId;
 
   @Private AliasMessage(Message.Type type, String messageId, Date timestamp,
       Map<String, Object> context, Map<String, Object> integrations, String userId,
@@ -76,8 +76,7 @@ public final class AliasMessage extends Message {
           : this.integrations.equals(that.integrations()))
           && ((this.userId == null) ? (that.userId() == null) : this.userId.equals(that.userId()))
           && (this.anonymousId.equals(that.anonymousId()))
-          && ((this.previousId == null) ? (that.previousId() == null)
-          : this.previousId.equals(that.previousId()));
+          && (this.previousId.equals(that.previousId()));
     }
     return false;
   }

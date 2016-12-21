@@ -248,7 +248,7 @@ final class JsonUtils {
     switch (message.type()) {
       case alias:
         String previousId = ((AliasMessage) message).previousId();
-        if (previousId != null) writer.name("previousId").value(previousId);
+        writer.name("previousId").value(previousId);
         break;
       case group:
         GroupMessage groupMessage = ((GroupMessage) message);
