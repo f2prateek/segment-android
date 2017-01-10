@@ -23,8 +23,6 @@ android {
 
 dependencies {
   compile deps.supportAnnotations
-  compile deps.moshi
-  compile deps.moshiAdapters
 
   testCompile deps.junit
   testCompile deps.assertJ

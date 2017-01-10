@@ -1,6 +1,7 @@
 package com.f2prateek.segment.model;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -10,18 +11,18 @@ import static com.f2prateek.segment.model.Utils.assertNotNullOrEmpty;
 
 public final class Batch {
   private final @NonNull List<Message> batch;
-  private final @NonNull Date sentAt;
+  private final @Nullable Date sentAt;
 
-  @Private Batch(@NonNull List<Message> batch, @NonNull Date sentAt) {
+  @Private Batch(@NonNull List<Message> batch, @Nullable Date sentAt) {
     this.batch = batch;
     this.sentAt = sentAt;
   }
 
-  public List<Message> batch() {
+  public @NonNull List<Message> batch() {
     return batch;
   }
 
-  public Date sentAt() {
+  public @Nullable Date sentAt() {
     return sentAt;
   }
 
@@ -35,7 +36,9 @@ public final class Batch {
     }
     if (o instanceof Batch) {
       Batch that = (Batch) o;
-      return (this.batch.equals(that.batch())) && (this.sentAt.equals(that.sentAt()));
+
+      return (this.batch.equals(that.batch())) //
+          && ((this.sentAt == null) ? (that.sentAt() == null) : this.sentAt.equals(that.sentAt()));
     }
     return false;
   }
@@ -45,7 +48,7 @@ public final class Batch {
     h *= 1000003;
     h ^= this.batch.hashCode();
     h *= 1000003;
-    h ^= this.sentAt.hashCode();
+    h ^= (sentAt == null) ? 0 : this.sentAt.hashCode();
     return h;
   }
 

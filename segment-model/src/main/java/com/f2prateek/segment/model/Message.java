@@ -20,13 +20,13 @@ public abstract class Message {
     identify, group, track, screen, alias
   }
 
-  protected final Type type;
-  protected final String messageId;
-  protected final Date timestamp;
-  protected final Map<String, Object> context;
-  protected final Map<String, Object> integrations;
-  protected final String userId;
-  protected final String anonymousId;
+  final Type type;
+  final String messageId;
+  final Date timestamp;
+  final Map<String, Object> context;
+  final Map<String, Object> integrations;
+  final String userId;
+  final String anonymousId;
 
   Message(Type type, String messageId, Date timestamp, Map<String, Object> context,
       Map<String, Object> integrations, String userId, String anonymousId) {
@@ -162,6 +162,20 @@ public abstract class Message {
         integrationsBuilder = new LinkedHashMap<>();
       }
       integrationsBuilder.put(key, immutableCopyOf(options));
+      return self();
+    }
+
+    /**
+     * Specify a dictionary of options for integrations.
+     *
+     * @see <a href="https://segment.com/docs/spec/common/#integrations">Integrations</a>
+     */
+    public @NonNull V integrations(@NonNull Map<String, Object> integrations) {
+      assertNotNullOrEmpty(integrations, "integrations");
+      if (integrationsBuilder == null) {
+        integrationsBuilder = new LinkedHashMap<>();
+      }
+      integrationsBuilder.putAll(integrations);
       return self();
     }
 

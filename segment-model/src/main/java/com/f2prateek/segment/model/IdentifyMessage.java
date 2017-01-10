@@ -16,11 +16,11 @@ import static com.f2prateek.segment.model.Utils.isNullOrEmpty;
  * @see <a href="https://segment.com/docs/spec/identify/">Identify</a>
  */
 public final class IdentifyMessage extends Message {
-  private final Map<String, Object> traits;
+  private @Nullable final Map<String, Object> traits;
 
   @Private IdentifyMessage(Type type, String messageId, Date timestamp, Map<String, Object> context,
       Map<String, Object> integrations, String userId, String anonymousId,
-      Map<String, Object> traits) {
+      @Nullable Map<String, Object> traits) {
     super(type, messageId, timestamp, context, integrations, userId, anonymousId);
     this.traits = traits;
   }

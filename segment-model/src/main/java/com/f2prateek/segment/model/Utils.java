@@ -36,6 +36,14 @@ final class Utils {
     return data;
   }
 
+  /** Throws a {@link NullPointerException} if the given map is null or empty. */
+  static @NonNull <K, V> Map<K, V> assertNotNullOrEmpty(Map<K, V> data, @Nullable String name) {
+    if (isNullOrEmpty(data)) {
+      throw new NullPointerException(name + " cannot be null or empty");
+    }
+    return data;
+  }
+
   /** Returns {@code true} if the string is null, or empty (once trimmed). */
   static boolean isNullOrEmpty(String text) {
     return text == null || text.length() == 0 || text.trim().length() == 0;

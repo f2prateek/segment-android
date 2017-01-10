@@ -18,12 +18,12 @@ import static com.f2prateek.segment.model.Utils.isNullOrEmpty;
  * @see <a href="https://segment.com/docs/spec/screen/">Screen</a>
  */
 public final class ScreenMessage extends Message {
-  private final String name;
-  private final Map<String, Object> properties;
+  private @NonNull final String name;
+  private @Nullable final Map<String, Object> properties;
 
   @Private ScreenMessage(Type type, String messageId, Date timestamp, Map<String, Object> context,
-      Map<String, Object> integrations, String userId, String anonymousId, String name,
-      Map<String, Object> properties) {
+      Map<String, Object> integrations, String userId, String anonymousId, @NonNull String name,
+      @Nullable Map<String, Object> properties) {
     super(type, messageId, timestamp, context, integrations, userId, anonymousId);
     this.name = name;
     this.properties = properties;

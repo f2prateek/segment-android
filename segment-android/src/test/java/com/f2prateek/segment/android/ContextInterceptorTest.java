@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 @RunWith(RobolectricTestRunner.class) //
 @Config(constants = BuildConfig.class, sdk = 23) //
 public class ContextInterceptorTest {
-  @Test public void contextInterceptor() {
+  @SuppressWarnings({ "unchecked", "ConstantConditions" }) @Test public void contextInterceptor() {
     Interceptor.Chain chain = mock(Interceptor.Chain.class);
     ArgumentCaptor<Message> argumentCaptor = ArgumentCaptor.forClass(Message.class);
     when(chain.message()).thenReturn(new TrackMessage.Builder() //

@@ -1,7 +1,6 @@
 package com.f2prateek.segment.model;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import java.util.Date;
 import java.util.Map;
 
@@ -15,16 +14,16 @@ import static com.f2prateek.segment.model.Utils.assertNotNullOrEmpty;
  * @see <a href="https://segment.com/docs/spec/alias/">Alias</a>
  */
 public final class AliasMessage extends Message {
-  private final String previousId;
+  private final @NonNull String previousId;
 
   @Private AliasMessage(Message.Type type, String messageId, Date timestamp,
       Map<String, Object> context, Map<String, Object> integrations, String userId,
-      String anonymousId, String previousId) {
+      String anonymousId, @NonNull String previousId) {
     super(type, messageId, timestamp, context, integrations, userId, anonymousId);
     this.previousId = previousId;
   }
 
-  public @Nullable String previousId() {
+  public @NonNull String previousId() {
     return previousId;
   }
 
@@ -76,10 +75,8 @@ public final class AliasMessage extends Message {
           && ((this.integrations == null) ? (that.integrations() == null)
           : this.integrations.equals(that.integrations()))
           && ((this.userId == null) ? (that.userId() == null) : this.userId.equals(that.userId()))
-          && ((this.anonymousId == null) ? (that.anonymousId() == null)
-          : this.anonymousId.equals(that.anonymousId()))
-          && ((this.previousId == null) ? (that.previousId() == null)
-          : this.previousId.equals(that.previousId()));
+          && (this.anonymousId.equals(that.anonymousId()))
+          && (this.previousId.equals(that.previousId()));
     }
     return false;
   }
@@ -101,7 +98,7 @@ public final class AliasMessage extends Message {
     h *= 1000003;
     h ^= (anonymousId == null) ? 0 : this.anonymousId.hashCode();
     h *= 1000003;
-    h ^= (previousId == null) ? 0 : this.previousId.hashCode();
+    h ^= this.previousId.hashCode();
     return h;
   }
 
