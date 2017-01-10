@@ -1,11 +1,16 @@
 package com.f2prateek.segment.android;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Application;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import com.f2prateek.segment.model.Message;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.Future;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -55,8 +60,9 @@ public class SegmentTest {
 
     List<Message> messages =
         Arrays.asList(segment.newAlias("newId").build(), segment.newGroup("groupId").build(),
-            segment.newIdentify("userId").build(), segment.newScreen("name").build(),
-            segment.newTrack("event").build());
+            segment.newIdentify("userId").build(),
+            segment.newIdentify(new LinkedHashMap<String, Object>()).build(),
+            segment.newScreen("name").build(), segment.newTrack("event").build());
 
     for (Message m : messages) {
       Mockito.reset(interceptor);
@@ -98,5 +104,34 @@ public class SegmentTest {
       // TODO: Use proper fixtures.
       assertThat(request.getBody().readUtf8()).contains(m.messageId());
     }
+  }
+
+  @TargetApi(Build.VERSION_CODES.LOLLIPOP) @Test public void logout() throws Exception {
+    final Queue<Message> messageQueue = new ConcurrentLinkedDeque<>();
+    Segment segment = new Segment.Builder() //
+        .writeKey("writeKey") //
+        .context(RuntimeEnvironment.application) //
+        .interceptor(new Interceptor() {
+          @Nullable @Override public Future<Message> intercept(Chain chain) {
+            Message message = chain.message();
+            messageQueue.add(message);
+            return chain.proceed(message);
+          }
+        }).baseUrl(server.url("/")) //
+        .build();
+
+    server.enqueue(new MockResponse());
+    segment.enqueue(segment.newIdentify("prateek").build()).get();
+    Message first = messageQueue.remove();
+    assertThat(first.userId()).isEqualTo("prateek");
+    String firstAnonymousId = first.anonymousId();
+
+    segment.logout();
+
+    server.enqueue(new MockResponse());
+    segment.enqueue(segment.newIdentify("not prateek").build()).get();
+    Message second = messageQueue.remove();
+    assertThat(second.userId()).isEqualTo("not prateek");
+    assertThat(second.anonymousId()).isNotEqualTo(firstAnonymousId);
   }
 }

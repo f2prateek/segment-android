@@ -154,10 +154,10 @@ public final class Segment {
   }
 
   /**
-   * Resets the analytics client by clearing any stored information about the user. Events queued
-   * on disk are not cleared, and will be uploaded at a later time.
+   * "Logs out" the user by clearing any stored information about the user. Events queued on disk
+   * are not cleared, and will be uploaded at a later time.
    */
-  public void reset() {
+  public void logout() {
     userIdCache.clear();
     anonymousIdCache.set(UUID.randomUUID().toString());
   }
