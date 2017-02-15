@@ -301,7 +301,8 @@ public final class Segment {
           File directory = context.getDir("segment-queue", Context.MODE_PRIVATE);
           File file = new File(directory, writeKey.hashCode() + ".segment");
           ObjectQueue.Converter<Message> converter = new MessageObjectQueueConverter();
-          queue = ObjectQueue.create(file, converter);
+          QueueFile qf = new QueueFile.Builder(file).build();
+          queue = ObjectQueue.create(qf, converter);
         } catch (IOException e) {
           queue = ObjectQueue.createInMemory();
         }

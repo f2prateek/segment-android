@@ -3,6 +3,7 @@ package com.f2prateek.segment.android;
 import com.f2prateek.segment.model.Message;
 import com.f2prateek.segment.model.TrackMessage;
 import com.squareup.tape2.ObjectQueue;
+import com.squareup.tape2.QueueFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -26,9 +27,9 @@ public class MoshiMessageConverterTest {
   @Before public void setUp() throws IOException {
     File parent = folder.getRoot();
     File file = new File(parent, "segment-queue");
-
     ObjectQueue.Converter<Message> converter = new MessageObjectQueueConverter();
-    queue = ObjectQueue.create(file, converter);
+    QueueFile qf = new QueueFile.Builder(file).build();
+    queue = ObjectQueue.create(qf, converter);
   }
 
   @Test public void disallowsLargeMessages() throws IOException {
